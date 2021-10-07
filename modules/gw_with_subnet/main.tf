@@ -1,74 +1,9 @@
-// resource "azurerm_virtual_network" "hub_vnet" {
-//   name                = var.vnet_name
-//   location            = var.location
-//   resource_group_name = var.rg_name
-//   address_space       = [var.vnet_address]
-// }
-
 resource "azurerm_subnet" "gw_subnet" {
   name                 = var.gw_subnet_name
   resource_group_name  = var.rg_name
   virtual_network_name = var.vnet_name
   address_prefixes     = [var.gw_subnet_address]
 }
-
-/*
-resource "azurerm_subnet" "hub_vm_subnet" {
-  name                 = var.vm_subnet_name
-  resource_group_name  = var.rg_name
-  virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = [var.vm_subnet_address]
-}
-*/
-
-#locals {
-#  nic_private_ip_address_allocation = "Dynamic"
-#}
-#
-#resource "azurerm_network_interface" "sample_nic" {
-#  name                = var.nic_name
-#  location            = var.location
-#  resource_group_name = var.rg_name
-#
-#  ip_configuration {
-#    name                          = local.id_conf_name
-#    subnet_id                     = azurerm_subnet.hub_vm_subnet.id
-#    private_ip_address_allocation = local.nic_private_ip_address_allocation
-#  }
-#}
-#
-#locals {
-#  id_conf_name = "testconfiguration1"
-#  disk_name ="osdisk${var.vm_name}"
-#  admin_username = "testadmin"
-#  admin_password = "Password1234!"
-#}
-#
-#resource "azurerm_linux_virtual_machine" "sample_vm" {
-#  computer_name         = var.vm_name
-#  name                  = var.vm_name
-#  location              = var.location
-#  resource_group_name   = var.rg_name
-#  network_interface_ids = [azurerm_network_interface.sample_nic.id]
-#  size                  = var.vm_size
-#
-#  source_image_reference {
-#    publisher = var.vm_image_publisher //"Canonical"
-#    offer     = var.vm_image_offer //"UbuntuServer"
-#    sku       = var.vm_image_sku //"16.04-LTS"
-#    version   = var.vm_image_version //"latest"
-#  }
-#
-#  os_disk {
-#    name                 = local.disk_name
-#    caching              = var.vm_disk_caching
-#    storage_account_type = var.vm_disk_storage_account_type //"Standard_LRS"
-#  }
-#
-#  admin_username                  = local.admin_username
-#  admin_password                  = local.admin_password
-#  disable_password_authentication = false
-#}
 
 locals {
   gw_public_ip_allocation_method = "Dynamic"

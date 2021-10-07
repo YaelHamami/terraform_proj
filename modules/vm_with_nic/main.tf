@@ -9,7 +9,7 @@ resource "azurerm_network_interface" "nic" {
 
   ip_configuration {
     name                          = local.id_conf_name
-    subnet_id                     = var.vm_subnet_id //azurerm_subnet.hub_vm_subnet.id
+    subnet_id                     = var.vm_subnet_id
     private_ip_address_allocation = local.nic_private_ip_address_allocation
   }
 }
@@ -30,16 +30,16 @@ resource "azurerm_linux_virtual_machine" "vm" {
   size                  = var.vm_size
 
   source_image_reference {
-    publisher = var.vm_image_publisher //"Canonical"
-    offer     = var.vm_image_offer //"UbuntuServer"
-    sku       = var.vm_image_sku //"16.04-LTS"
-    version   = var.vm_image_version //"latest"
+    publisher = var.vm_image_publisher
+    offer     = var.vm_image_offer
+    sku       = var.vm_image_sku
+    version   = var.vm_image_version
   }
 
   os_disk {
     name                 = local.disk_name
     caching              = var.vm_disk_caching
-    storage_account_type = var.vm_disk_storage_account_type //"Standard_LRS"
+    storage_account_type = var.vm_disk_storage_account_type
   }
 
   admin_username                  = local.admin_username
