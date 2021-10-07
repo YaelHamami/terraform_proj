@@ -5,3 +5,7 @@
 #output "gw_subnet_id" {
 #  value = azurerm_subnet.hub_subnet.id
 #}
+
+#output "" {
+#  value = azurerm_subnet.hub_vm_subnet.id
+#}
