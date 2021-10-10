@@ -46,3 +46,5 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_password                  = local.admin_password
   disable_password_authentication = false
 }
+
+
