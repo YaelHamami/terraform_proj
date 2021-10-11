@@ -1,0 +1,18 @@
+{
+  "rules": [
+     {
+      "name": "Allow_tcp_hub_to_spoke",
+      "source_addresses": ["10.0.0.0/16"],
+      "destination_ports": ["22"],
+      "destination_addresses": ["20.0.0.0/16"],
+      "protocols": ["TCP"]
+    },
+    {
+      "name": "Allow_tcp_spoke_to_hub",
+      "source_addresses": ["20.0.0.0/16"],
+      "destination_ports": ["22"],
+      "destination_addresses": ["10.0.0.0/16"],
+      "protocols": ["TCP"]
+    }
+  ]
+}

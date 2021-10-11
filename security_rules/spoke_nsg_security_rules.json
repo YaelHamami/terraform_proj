@@ -1,0 +1,37 @@
+{
+  "security_rules": [
+    {
+      "name": "allow_TCP_in",
+      "priority": 110,
+      "direction": "Inbound",
+      "access": "Allow",
+      "protocol": "Tcp",
+      "source_port_range": "*",
+      "destination_port_range": "*",
+      "source_address_prefix": "*",
+      "destination_address_prefix": "*"
+    },
+    {
+      "name": "allow_ICMP_in",
+      "priority": 115,
+      "direction": "Inbound",
+      "access": "Allow",
+      "protocol": "Icmp",
+      "source_port_range": "*",
+      "destination_port_range": "*",
+      "source_address_prefix": "*",
+      "destination_address_prefix": "*"
+    },
+    {
+      "name": "deny_all_in",
+      "priority": 120,
+      "direction": "Inbound",
+      "access": "Deny",
+      "protocol": "*",
+      "source_port_range": "*",
+      "destination_port_range": "*",
+      "source_address_prefix": "*",
+      "destination_address_prefix": "*"
+    }
+  ]
+}

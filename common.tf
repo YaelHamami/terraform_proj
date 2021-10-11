@@ -1,3 +1,14 @@
+# Resource group section.
+locals {
+  rg_name = "yael_proj_rg"
+  all_resources_location = "West Europe"
+}
+
+resource "azurerm_resource_group" "yael_proj_rg" {
+  name     = local.rg_name
+  location = local.all_resources_location
+}
+
 # Peering the hub and spoke vnets.
 resource "azurerm_virtual_network_peering" "peer_hub_to_spoke" {
   name                      = "peer_hub_to_spoke"

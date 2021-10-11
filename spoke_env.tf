@@ -42,7 +42,7 @@ locals {
 }
 
 module "vm_of_spoke" {
-  source = "./modules/vm_with_nic"
+  source = "./modules/vm"
   location = local.all_resources_location
   rg_name = local.rg_name
   nic_name   = local.spoke_nic_name

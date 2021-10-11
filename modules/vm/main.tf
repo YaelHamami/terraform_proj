@@ -45,6 +45,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username                  = local.admin_username
   admin_password                  = local.admin_password
   disable_password_authentication = false
+
+  depends_on = [azurerm_network_interface.nic]
 }
 
 
