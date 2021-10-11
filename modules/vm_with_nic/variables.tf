@@ -57,3 +57,15 @@ variable "nic_name" {
   type = string
   description = "Name of nic."
 }
+
+variable "admin_username" {
+  type = string
+  description = "Admin username of the vm."
+}
+
+variable "admin_password" {
+  type = string
+  description = "Admin password of the vm."
+}
+
+

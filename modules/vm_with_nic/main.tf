@@ -17,8 +17,8 @@ resource "azurerm_network_interface" "nic" {
 locals {
   id_conf_name = "testconfiguration1"
   disk_name ="osdisk${var.vm_name}"
-  admin_username = "testadmin"
-  admin_password = "Password1234!"
+  admin_username = var.admin_username
+  admin_password = var.admin_password
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
