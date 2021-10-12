@@ -12,9 +12,10 @@ module "hub_firewall" {
   rg_name                 = local.rg_name
   subnet_id               = azurerm_subnet.hub_AzureFirewallSubnet.id
   priority_rule           = local.priority_rule
+  rule_name  = "allow_tcp"
 
-  depends_on = [azurerm_resource_group.yael_proj_rg]
-  rule_name  = "allow_tcp_toSpoke"
+    depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_subnet.hub_AzureFirewallSubnet]
+
 }
 #======================================================================================================================
 # Route table for the traffic between the hub and spoke will pass through the firewall.

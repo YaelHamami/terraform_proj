@@ -8,20 +8,25 @@ variable "location" {
   description = "Location of rg and all the resources in the module."
 }
 
- variable "vnet_name" {
-   type = string
-   description = "Name of vnet."
- }
-
-variable "gw_subnet_name" {
+variable "gw_subnet_id" {
   type = string
-  description = "Name of subnet with the gateway."
+  description = "The id of the gateway subnet."
 }
 
-variable "gw_subnet_address" {
-  type = string
-  description = "Address of subnet with the gateway."
-}
+# variable "vnet_name" {
+#   type = string
+#   description = "Name of vnet."
+# }
+
+#variable "gw_subnet_name" {
+#  type = string
+#  description = "Name of subnet with the gateway."
+#}
+
+#variable "gw_subnet_address" {
+#  type = string
+#  description = "Address of subnet with the gateway."
+#}
 
 variable "gw_name" {
   type = string

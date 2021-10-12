@@ -7,16 +7,23 @@ locals {
   hub_gw_vpn_address_space = ["10.2.0.0/24"]
 }
 
+resource "azurerm_subnet" "gw_subnet" {
+  name                 = local.hub_gw_subnet_name
+  resource_group_name  = local.rg_name
+  virtual_network_name = azurerm_virtual_network.hub_vnet.name
+  address_prefixes     = [local.hub_gw_subnet_address]
+}
+
 module "gw_with_subnet" {
-  source = "./modules/gw_with_subnet"
+  source = "modules/gw"
 
   location = local.all_resources_location
   rg_name = local.rg_name
 
-  vnet_name = azurerm_virtual_network.hub_vnet.name
+#  vnet_name = azurerm_virtual_network.hub_vnet.name
 
-  gw_subnet_address = local.hub_gw_subnet_address
-  gw_subnet_name = local.hub_gw_subnet_name
+#  gw_subnet_address = local.hub_gw_subnet_address
+#  gw_subnet_name = local.hub_gw_subnet_name
 
   gw_name    = local.hub_gw_name
   gw_vpn_address_space = local.hub_gw_vpn_address_space
@@ -26,5 +33,7 @@ module "gw_with_subnet" {
   aad_issuer_gw = var.aad_issuer_gw
   aad_tenant_gw = var.aad_tenant_gw
 
-  depends_on = [azurerm_virtual_network.hub_vnet]
+  gw_subnet_id = azurerm_subnet.gw_subnet.id
+
+  depends_on = [azurerm_virtual_network.hub_vnet, azurerm_subnet.gw_subnet]
 }

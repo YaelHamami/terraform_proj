@@ -1,9 +1,9 @@
-resource "azurerm_subnet" "gw_subnet" {
-  name                 = var.gw_subnet_name
-  resource_group_name  = var.rg_name
-  virtual_network_name = var.vnet_name
-  address_prefixes     = [var.gw_subnet_address]
-}
+#resource "azurerm_subnet" "gw_subnet" {
+#  name                 = var.gw_subnet_name
+#  resource_group_name  = var.rg_name
+#  virtual_network_name = var.vnet_name
+#  address_prefixes     = [var.gw_subnet_address]
+#}
 
 locals {
   gw_public_ip_allocation_method = "Dynamic"
@@ -43,7 +43,7 @@ resource "azurerm_virtual_network_gateway" "gw" {
     name                          = local.ip_config_name
     public_ip_address_id          =  azurerm_public_ip.gw_public_ip.id
     private_ip_address_allocation = local.gw_private_ip_address_allocation
-    subnet_id                     = azurerm_subnet.gw_subnet.id
+    subnet_id                     = var.gw_subnet_id
   }
 
   vpn_client_configuration {

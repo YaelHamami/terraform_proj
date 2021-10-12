@@ -1,3 +1,3 @@
 output "hub_firewall_id" {
-  value = azurerm_firewall.firewall.id
+  value = module.hub_firewall.fw_id
 }

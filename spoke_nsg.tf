@@ -54,7 +54,7 @@ module "spoke_nsg" {
   source = "./modules/nsg"
   all_resources_location = local.all_resources_location
   rg_name = local.rg_name
-  security_rules = jsondecode(file("./security_rules/spoke_nsg_security_rules.json")).security_rules
+  security_rules = jsondecode(file("./network_security_rules/spoke_nsg_security_rules.json")).security_rules
   associated_subnet_id = azurerm_subnet.spoke_vm_subnet.id
 
   depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_subnet.spoke_vm_subnet]

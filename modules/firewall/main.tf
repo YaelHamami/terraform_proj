@@ -17,7 +17,6 @@ locals {
   fw_policy_threat_intelligence_mode = "Deny"
 }
 
-
 # Firewall policy.
 resource "azurerm_firewall_policy" "firewall_policy" {
   name                = var.firewall_policy_name //"firewall_hub_policy"
@@ -25,7 +24,6 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   location            = var.all_resources_location //"West Europe"
 
   threat_intelligence_mode = local.fw_policy_threat_intelligence_mode
-
 }
 
 # The firewall.
@@ -116,13 +114,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "example" {
         destination_addresses = rule.value["destination_addresses"] //["20.0.0.0/16",]
         protocols             = rule.value["protocols"]
       }
-
-#      name                  = var.rule_name //"allow_tcp_toSpoke"
-#      protocols             = var.list_rule_protocols // ["TCP",]
-#      source_addresses      = var.list_source_addresses // [ "10.0.0.0/16", ]
-#      destination_addresses = var.list_destination_addresses //["20.0.0.0/16",]
-#      destination_ports     = var.list_destination_ports // ["22", ]
     }
   }
+
+  depends_on = [azurerm_firewall_policy.firewall_policy, azurerm_firewall.firewall]
 }
+
 
