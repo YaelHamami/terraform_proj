@@ -6,7 +6,7 @@ resource "azurerm_network_interface" "nic" {
   name                = var.nic_name
   location            = var.location
   resource_group_name = var.rg_name
-  enable_ip_forwarding = var.enable_ip_forwarding
+  // enable_ip_forwarding = var.enable_ip_forwarding
 
   ip_configuration {
     name                          = local.id_conf_name

@@ -68,8 +68,8 @@ variable "admin_password" {
   description = "Admin password of the vm."
 }
 
-variable "enable_ip_forwarding" {
-  type = bool
-  description = "Allow the nic to forward traffic or not."
-}
+#variable "enable_ip_forwarding" {
+#  type = bool
+#  description = "Allow the nic to forward traffic or not."
+#}
 

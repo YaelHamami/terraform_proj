@@ -63,9 +63,9 @@ module "vm_of_hub" {
   location = local.all_resources_location
   rg_name = local.rg_name
   nic_name   = local.hub_nic_name
+  // enable_ip_forwarding = local.hub_vm_enable_ip_forwarding
 
   vm_name = local.hub_vm_name
-
   vm_image_offer = local.hub_vm_offer
   vm_image_publisher = local.hub_vm_publisher
   vm_image_sku = local.hub_vm_sku
@@ -80,7 +80,7 @@ module "vm_of_hub" {
   admin_username = var.vm_username
 
   depends_on = [azurerm_subnet.hub_vm_subnet]
-  enable_ip_forwarding = local.hub_vm_enable_ip_forwarding
+
 }
 
 locals {
