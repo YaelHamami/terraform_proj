@@ -11,6 +11,8 @@ resource "azurerm_public_ip" "firewall_public_ip" {
   resource_group_name = var.rg_name
   allocation_method   = local.firewall_public_ip_allocation_method
   sku                 = local.firewall_sku
+
+  tags = {}
 }
 
 locals {
@@ -24,6 +26,8 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   location            = var.all_resources_location //"West Europe"
 
   threat_intelligence_mode = local.fw_policy_threat_intelligence_mode
+
+  tags = {}
 }
 
 # The firewall.
@@ -38,6 +42,8 @@ resource "azurerm_firewall" "firewall" {
     subnet_id            = var.subnet_id
     public_ip_address_id = azurerm_public_ip.firewall_public_ip.id
   }
+
+  tags = {}
 
   depends_on = [azurerm_public_ip.firewall_public_ip, azurerm_firewall_policy.firewall_policy]
 }

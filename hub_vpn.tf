@@ -14,16 +14,11 @@ resource "azurerm_subnet" "gw_subnet" {
   address_prefixes     = [local.hub_gw_subnet_address]
 }
 
-module "gw_with_subnet" {
-  source = "modules/gw"
+module "hub_gateway" {
+  source = "./modules/gateway"
 
   location = local.all_resources_location
   rg_name = local.rg_name
-
-#  vnet_name = azurerm_virtual_network.hub_vnet.name
-
-#  gw_subnet_address = local.hub_gw_subnet_address
-#  gw_subnet_name = local.hub_gw_subnet_name
 
   gw_name    = local.hub_gw_name
   gw_vpn_address_space = local.hub_gw_vpn_address_space

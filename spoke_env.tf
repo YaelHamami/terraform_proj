@@ -10,6 +10,8 @@ resource "azurerm_virtual_network" "spoke_vnet" {
   resource_group_name = local.rg_name
   address_space       = [local.spoke_vnet_address]
 
+  tags = {}
+
   depends_on = [azurerm_resource_group.yael_proj_rg]
 }
 
@@ -64,4 +66,15 @@ module "vm_of_spoke" {
 
   depends_on = [azurerm_subnet.spoke_vm_subnet]
 
+}
+
+# Nsg of spoke section.
+module "spoke_nsg" {
+  source = "./modules/nsg"
+  all_resources_location = local.all_resources_location
+  rg_name = local.rg_name
+  security_rules = jsondecode(templatefile("./network_security_rules/spoke_nsg_security_rules.json", {fw_public_ip = module.hub_firewall.fw_public_ip})).security_rules
+  associated_subnet_id = azurerm_subnet.spoke_vm_subnet.id
+
+  depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_subnet.spoke_vm_subnet]
 }

@@ -20,17 +20,13 @@ resource "azurerm_monitor_diagnostic_setting" "fw_diagnostic_setting" {
     content {
       category = log.value.category
 
-       retention_policy  {
-
-          enabled = log.value.retention_policy.enabled
-          days    = log.value.retention_policy.days
-
+      retention_policy {
+#
+        enabled = log.value.retention_policy.enabled
+#        days    = log.value.retention_policy.days
+#
       }
     }
 
   }
-}
-
-output "vavavavavavavaooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" {
-  value = azurerm_monitor_diagnostic_setting.fw_diagnostic_setting.log
 }

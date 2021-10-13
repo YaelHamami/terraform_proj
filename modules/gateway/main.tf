@@ -14,6 +14,8 @@ resource "azurerm_public_ip" "gw_public_ip" {
   location            = var.location
   resource_group_name = var.rg_name
   allocation_method = local.gw_public_ip_allocation_method
+
+  tags = {}
 }
 
 locals {
@@ -54,4 +56,6 @@ resource "azurerm_virtual_network_gateway" "gw" {
     aad_audience = var.aad_audience_gw
     aad_issuer = var.aad_issuer_gw
   }
+
+  tags = {}
 }

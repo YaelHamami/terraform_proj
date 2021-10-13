@@ -7,6 +7,8 @@ locals {
 resource "azurerm_resource_group" "yael_proj_rg" {
   name     = local.rg_name
   location = local.all_resources_location
+
+  tags = {}
 }
 
 # Peering the hub and spoke vnets.

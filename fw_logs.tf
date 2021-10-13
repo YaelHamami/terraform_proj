@@ -37,9 +37,9 @@ module "hub_fw_diagnostic_setting" {
   all_resources_location   = local.all_resources_location
   analytics_workspace_name = "firewall-analytics-workspace"
   diagnostic_setting_name  = "firewall_diagnostic_setting"
-  logs                     = jsondecode(file("./diagnostic_setting_logs/fw_log.json")).logs
+  logs                     = jsondecode(templatefile("./diagnostic_setting_logs/fw_log.json", {is_enabled = true})).logs
   rg_name                  = local.rg_name
   target_resource_id       = module.hub_firewall.fw_id
 
-  depends_on = [module.hub_firewall]
+#  depends_on = [module.hub_firewall]
 }

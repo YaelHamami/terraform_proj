@@ -12,6 +12,17 @@
       "destination_address_prefix": "20.0.3.0/24"
     },
     {
+      "name": "forward_all_to_firewall",
+      "priority": 115,
+      "direction": "Inbound",
+      "access": "Allow",
+      "protocol": "*",
+      "source_port_range": "*",
+      "destination_port_range": "*",
+      "source_address_prefix": "0.0.0.0/0",
+      "destination_address_prefix": "${fw_public_ip}"
+    },
+    {
       "name": "deny_all_in",
       "priority": 120,
       "direction": "Inbound",

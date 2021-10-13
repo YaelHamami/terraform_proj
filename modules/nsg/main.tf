@@ -19,6 +19,8 @@ resource "azurerm_network_security_group" "nsg" {
       destination_address_prefix = security_rule.value["destination_address_prefix"]
     }
   }
+
+  tags = {}
 }
 
 resource "azurerm_subnet_network_security_group_association" "spoke_nsg_association" {

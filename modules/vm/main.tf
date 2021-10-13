@@ -12,6 +12,8 @@ resource "azurerm_network_interface" "nic" {
     subnet_id                     = var.vm_subnet_id
     private_ip_address_allocation = local.nic_private_ip_address_allocation
   }
+
+  tags = {}
 }
 
 locals {
@@ -45,6 +47,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username                  = local.admin_username
   admin_password                  = local.admin_password
   disable_password_authentication = false
+
+  tags = {}
 
   depends_on = [azurerm_network_interface.nic]
 }

@@ -28,7 +28,7 @@ variable "logs" {
     category         = string,
     retention_policy = object({
       enabled = bool,
-      days    = number
+#      days    = number
     })
   }))
   description = "List of logs for the diagnostic setting."

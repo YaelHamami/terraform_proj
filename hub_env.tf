@@ -10,6 +10,8 @@ resource "azurerm_virtual_network" "hub_vnet" {
   resource_group_name = local.rg_name
   address_space       = [local.hub_vnet_address]
 
+  tags = {}
+
   depends_on = [azurerm_resource_group.yael_proj_rg]
 }
 
