@@ -2,13 +2,13 @@
   "routes": [
     {
       "name": "hub_to_spoke",
-      "address_prefix": "10.0.0.0/16",
+      "address_prefix": "${hub_subnet_mask}",
       "next_hop_type": "VirtualAppliance",
       "next_hop_in_ip_address": "${fw_private_ip}"
     },
     {
       "name": "spoke_to_hub",
-      "address_prefix": "20.0.0.0/16",
+      "address_prefix": "${spoke_subnet_mask}",
       "next_hop_type": "VirtualAppliance",
       "next_hop_in_ip_address": "${fw_private_ip}"
     }

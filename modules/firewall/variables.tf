@@ -27,22 +27,7 @@ variable "rule_name" {
   type = string
   description = "The rule name."
 }
-#variable "list_source_addresses" {
-#  type = list(string)
-#  description = "List of the source addresses."
-#}
-#variable "list_destination_ports" {
-#  type = list(string)
-#  description = "List of the destination ports."
-#}
-#variable "list_destination_addresses" {
-#  type = list(string)
-#  description = "List of the destination addresses."
-#}
-#variable "list_rule_protocols" {
-#  type = list(string)
-#  description = "Protocol of the rule."
-#}
+
 variable "priority_rule" {
   type = string
   description = "The priority of the rule."

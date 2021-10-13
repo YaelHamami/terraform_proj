@@ -13,21 +13,6 @@ variable "gw_subnet_id" {
   description = "The id of the gateway subnet."
 }
 
-# variable "vnet_name" {
-#   type = string
-#   description = "Name of vnet."
-# }
-
-#variable "gw_subnet_name" {
-#  type = string
-#  description = "Name of subnet with the gateway."
-#}
-
-#variable "gw_subnet_address" {
-#  type = string
-#  description = "Address of subnet with the gateway."
-#}
-
 variable "gw_name" {
   type = string
   description = "Name of gateway."

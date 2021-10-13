@@ -1,7 +1,7 @@
-# Spoke vnet section.
+# Spoke vnet.
 locals {
   spoke_vnet_name = "spoke-vnet"
-  spoke_vnet_address = "20.0.0.0/16"
+  spoke_vnet_address = "10.1.0.0/16"
 }
 
 resource "azurerm_virtual_network" "spoke_vnet" {
@@ -18,7 +18,7 @@ resource "azurerm_virtual_network" "spoke_vnet" {
 # Subnet of the spoke vnet (a vm will be in it).
 locals {
   spoke_vm_subnet_name = "spoke-vm-subnet"
-  spoke_vm_subnet_address = "20.0.3.0/24"
+  spoke_vm_subnet_address = "10.1.3.0/24"
 }
 
 resource "azurerm_subnet" "spoke_vm_subnet" {
@@ -41,6 +41,7 @@ locals {
   spoke_vm_sku       = "16.04-LTS"
   spoke_vm_version   = "latest"
   spoke_vm_disk_storage_account_type = "Standard_LRS"
+  spoke_vm_enable_ip_forwarding = false
 }
 
 module "vm_of_spoke" {
@@ -66,14 +67,18 @@ module "vm_of_spoke" {
 
   depends_on = [azurerm_subnet.spoke_vm_subnet]
 
+  enable_ip_forwarding = local.spoke_vm_enable_ip_forwarding
 }
 
-# Nsg of spoke section.
+# Nsg of spoke.
+locals {
+  map_nsg_security_rules_vars = {fw_public_ip = module.hub_firewall.fw_public_ip, spoke_subnet_mask = local.spoke_vnet_address, hub_subnet_mask = local.hub_vnet_address}
+}
 module "spoke_nsg" {
   source = "./modules/nsg"
   all_resources_location = local.all_resources_location
   rg_name = local.rg_name
-  security_rules = jsondecode(templatefile("./network_security_rules/spoke_nsg_security_rules.json", {fw_public_ip = module.hub_firewall.fw_public_ip})).security_rules
+  security_rules = jsondecode(templatefile("./network_security_rules/spoke_nsg_security_rules.json", local.map_nsg_security_rules_vars)).security_rules
   associated_subnet_id = azurerm_subnet.spoke_vm_subnet.id
 
   depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_subnet.spoke_vm_subnet]

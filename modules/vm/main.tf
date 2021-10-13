@@ -6,6 +6,7 @@ resource "azurerm_network_interface" "nic" {
   name                = var.nic_name
   location            = var.location
   resource_group_name = var.rg_name
+  enable_ip_forwarding = var.enable_ip_forwarding
 
   ip_configuration {
     name                          = local.id_conf_name
@@ -30,6 +31,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name   = var.rg_name
   network_interface_ids = [azurerm_network_interface.nic.id]
   size                  = var.vm_size
+
 
   source_image_reference {
     publisher = var.vm_image_publisher

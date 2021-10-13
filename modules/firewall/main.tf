@@ -1,7 +1,6 @@
 # Public IP of the firewall.
 locals {
   firewall_public_ip_allocation_method = "Static"
-  //"firewall_public_ip"
   firewall_sku                         = "Standard"
 }
 
@@ -21,9 +20,9 @@ locals {
 
 # Firewall policy.
 resource "azurerm_firewall_policy" "firewall_policy" {
-  name                = var.firewall_policy_name //"firewall_hub_policy"
+  name                = var.firewall_policy_name
   resource_group_name = var.rg_name
-  location            = var.all_resources_location //"West Europe"
+  location            = var.all_resources_location
 
   threat_intelligence_mode = local.fw_policy_threat_intelligence_mode
 
@@ -100,13 +99,13 @@ locals {
   network_rule_collection_priority = 200
 }
 
-resource "azurerm_firewall_policy_rule_collection_group" "example" {
+resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_collection_group" {
   name               = local.rule_collection_name
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
-  priority           = var.priority_rule // 200
+  priority           = var.priority_rule
 
   network_rule_collection {
-    name     = var.rule_name //"allow_tcp_toSpoke"
+    name     = var.rule_name
     priority = local.network_rule_collection_priority
     action   = local.rule_collection_action
 

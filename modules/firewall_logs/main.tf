@@ -6,7 +6,7 @@ resource "azurerm_log_analytics_workspace" "fw_analytics_workspace" {
 
 resource "azurerm_monitor_diagnostic_setting" "fw_diagnostic_setting" {
   name                       = var.diagnostic_setting_name
-  target_resource_id         = var.target_resource_id // azurerm_firewall.firewall.id
+  target_resource_id         = var.target_resource_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.fw_analytics_workspace.id
 
   depends_on = [azurerm_log_analytics_workspace.fw_analytics_workspace]
@@ -21,10 +21,7 @@ resource "azurerm_monitor_diagnostic_setting" "fw_diagnostic_setting" {
       category = log.value.category
 
       retention_policy {
-#
         enabled = log.value.retention_policy.enabled
-#        days    = log.value.retention_policy.days
-#
       }
     }
 

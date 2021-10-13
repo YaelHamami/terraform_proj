@@ -24,7 +24,7 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "spoke_nsg_association" {
-  subnet_id                 = var.associated_subnet_id // azurerm_subnet.spoke_vm_subnet.id
+  subnet_id                 = var.associated_subnet_id
   network_security_group_id = azurerm_network_security_group.nsg.id
 
   depends_on = [azurerm_network_security_group.nsg]

@@ -23,12 +23,10 @@ variable "diagnostic_setting_name" {
 }
 
 variable "logs" {
-  type = list(
-  object({
+  type = list(object({
     category         = string,
     retention_policy = object({
       enabled = bool,
-#      days    = number
     })
   }))
   description = "List of logs for the diagnostic setting."

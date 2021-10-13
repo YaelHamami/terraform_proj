@@ -1,10 +1,3 @@
-#resource "azurerm_subnet" "gw_subnet" {
-#  name                 = var.gw_subnet_name
-#  resource_group_name  = var.rg_name
-#  virtual_network_name = var.vnet_name
-#  address_prefixes     = [var.gw_subnet_address]
-#}
-
 locals {
   gw_public_ip_allocation_method = "Dynamic"
 }

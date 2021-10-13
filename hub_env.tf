@@ -55,6 +55,7 @@ locals {
   hub_vm_sku       = "16.04-LTS"
   hub_vm_version   = "latest"
   hub_vm_disk_storage_account_type = "Standard_LRS"
+  hub_vm_enable_ip_forwarding = true
 }
 
 module "vm_of_hub" {
@@ -79,5 +80,27 @@ module "vm_of_hub" {
   admin_username = var.vm_username
 
   depends_on = [azurerm_subnet.hub_vm_subnet]
+  enable_ip_forwarding = local.hub_vm_enable_ip_forwarding
+}
+
+locals {
+  priority_rule = 200
+  map_fw_network_rules_vars = {hub_subnet_mask = local.hub_vnet_address, spoke_subnet_mask = local.spoke_vnet_address}
+}
+
+#firewall
+module "hub_firewall" {
+  source = "./modules/firewall"
+
+  all_resources_location  = local.all_resources_location
+  firewall_policy_name    = "hub_firewall_policy"
+  firewall_public_ip_name = "hub_firewall_public_ip"
+  network_rules           = jsondecode(templatefile("./rule_collections/hub_fw_network_rules.json", local.map_fw_network_rules_vars)).rules
+  rg_name                 = local.rg_name
+  subnet_id               = azurerm_subnet.hub_AzureFirewallSubnet.id
+  priority_rule           = local.priority_rule
+  rule_name  = "allow_tcp"
+
+  depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_subnet.hub_AzureFirewallSubnet, azurerm_virtual_network.hub_vnet]
 }
 
