@@ -6,10 +6,10 @@ locals {
 
 resource "azurerm_public_ip" "firewall_public_ip" {
   name                = var.firewall_public_ip_name
-  location            = var.all_resources_location
-  resource_group_name = var.rg_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   allocation_method   = local.firewall_public_ip_allocation_method
-  sku                 = local.firewall_sku
+  sku                 = var.public_ip_sku
 
   tags = {}
 }
@@ -18,23 +18,30 @@ locals {
   fw_policy_threat_intelligence_mode = "Deny"
 }
 
-# Firewall policy.
-resource "azurerm_firewall_policy" "firewall_policy" {
-  name                = var.firewall_policy_name
-  resource_group_name = var.rg_name
-  location            = var.all_resources_location
+## Firewall policy.
+#resource "azurerm_firewall_policy" "firewall_policy" {
+#  name                = var.firewall_policy_name
+#  resource_group_name = var.rg_name
+#  location            = var.all_resources_location
+#
+#  threat_intelligence_mode = local.fw_policy_threat_intelligence_mode
+#
+#  tags = {}
+#}
 
-  threat_intelligence_mode = local.fw_policy_threat_intelligence_mode
-
-  tags = {}
+module "firewall_policy" {
+  source               = "../firewall_policy"
+  location             = var.location
+  firewall_policy_name = var.firewall_policy_name
+  resource_group_name  = var.resource_group_name
 }
 
 # The firewall.
 resource "azurerm_firewall" "firewall" {
   name                = "hub_firewall"
-  location            = var.all_resources_location
-  resource_group_name = var.rg_name
-  firewall_policy_id  = azurerm_firewall_policy.firewall_policy.id
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  firewall_policy_id  = module.firewall_policy.id
 
   ip_configuration {
     name                 = "configuration"
@@ -44,68 +51,26 @@ resource "azurerm_firewall" "firewall" {
 
   tags = {}
 
-  depends_on = [azurerm_public_ip.firewall_public_ip, azurerm_firewall_policy.firewall_policy]
+  depends_on = [azurerm_public_ip.firewall_public_ip, module.firewall_policy]
 }
 
 # Firewall Rules.
 locals {
-  rule_collection_action = "Allow"
-  rule_collection_name   = "${azurerm_firewall.firewall.name}_rule_collection"
+  rule_collection_action     = "Allow"
+  rule_collection_group_name = "${azurerm_firewall.firewall.name}_rule_collection"
 }
-#resource "azurerm_firewall_network_rule_collection" "network_rule_collection" {
-#  name                = local.rule_collection_name
-#  azure_firewall_name = azurerm_firewall.firewall.name
-#  resource_group_name = var.rg_name
-#  priority            = var.priority_rule // 200
-#  action              = local.rule_collection_action
-#
-#  dynamic "rule" {
-#        for_each = var.network_rules
-#
-#        content {
-#          name                  = rule.value["name"]
-#          destination_ports     = rule.value["destination_ports"]
-#          source_addresses      = rule.value["source_addresses"] // [ "10.0.0.0/16", ]
-#          destination_addresses = rule.value["destination_addresses"] //["20.0.0.0/16",]
-#          protocols             = rule.value["protocols"]
-#        }
-#
-#  #      name                  = var.rule_name //"allow_tcp_toSpoke"
-#  #      protocols             = var.list_rule_protocols // ["TCP",]
-#  #      source_addresses      = var.list_source_addresses // [ "10.0.0.0/16", ]
-#  #      destination_addresses = var.list_destination_addresses //["20.0.0.0/16",]
-#  #      destination_ports     = var.list_destination_ports // ["22", ]
-#
-#    }
-#
-##  rule {
-##    name = var.rule_name //"allow_tcp_toSpoke"
-##
-##    source_addresses = var.list_source_addresses
-##    // [ "10.0.0.0/16", ]
-##
-##    destination_ports = var.list_destination_ports
-##    // ["22", ]
-##
-##    destination_addresses = var.list_destination_addresses
-##    //["20.0.0.0/16",]
-##
-##    protocols = var.list_rule_protocols
-##    // ["TCP",]
-##  }
-#}
 
 locals {
   network_rule_collection_priority = 200
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_collection_group" {
-  name               = local.rule_collection_name
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
+  name               = local.rule_collection_group_name
+  firewall_policy_id = module.firewall_policy.id
   priority           = var.priority_rule
 
   network_rule_collection {
-    name     = var.rule_name
+    name     = var.rule_collection_name
     priority = local.network_rule_collection_priority
     action   = local.rule_collection_action
 
@@ -115,14 +80,146 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_c
       content {
         name                  = rule.value["name"]
         destination_ports     = rule.value["destination_ports"]
-        source_addresses      = rule.value["source_addresses"] // [ "10.0.0.0/16", ]
-        destination_addresses = rule.value["destination_addresses"] //["20.0.0.0/16",]
+        source_addresses      = rule.value["source_addresses"]
+        destination_addresses = rule.value["destination_addresses"]
         protocols             = rule.value["protocols"]
       }
     }
   }
 
-  depends_on = [azurerm_firewall_policy.firewall_policy, azurerm_firewall.firewall]
+  depends_on = [module.firewall_policy]
+}
+
+#variable "network_rule_collections" {
+#  type = list(object({
+#    name     = string,
+#    priority = number,
+#    action   = string,
+#    rules    = list(object({
+#      name                  = string,
+#      source_addresses      = list(string),
+#      destination_ports     = list(string),
+#      destination_addresses = list(string),
+#      protocols             = list(string)
+#    }))
+#  }))
+#}
+#
+#variable "application_rule_collections" {
+#  type = list(object({
+#    name     = string,
+#    priority = number,
+#    action   = string,
+#    rules    = list(object({
+#      name              = string,
+#      protocols         = list(object({
+#        type = string,
+#        port = number
+#      }))
+#      source_addresses  = list(string),
+#      destination_fqdns = list(string),
+#    }))
+#  }))
+#}
+#
+#variable "nat_rule_collections" {
+#  type = list(object({
+#    rule_collection_name     = string
+#    priority                 = number
+#    action                   = string
+#    rule_protocols           = list(string)
+#    rule_source_addresses    = list(string)
+#    rule_destination_address = string
+#    rule_destination_ports   = list(string)
+#    rule_translated_address  = string
+#    rule_translated_port     = string
+#  }))
+#}
+#resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_collection_group_dynamic" {
+#  name               = local.rule_collection_group_name
+#  firewall_policy_id = module.firewall_policy.id
+#  priority           = var.priority_rule
+#
+#  dynamic "network_rule_collection" {
+#    for_each = var.network_rule_collections
+#    content {
+#      name     = network_rule_collection.value.name
+#      priority = network_rule_collection.value.priority
+#      action   = network_rule_collection.value.action
+#
+#      dynamic "rule" {
+#        for_each = network_rule_collection.value.rules
+#
+#        content {
+#          name                  = rule.value["name"]
+#          destination_ports     = rule.value["destination_ports"]
+#          source_addresses      = rule.value["source_addresses"]
+#          destination_addresses = rule.value["destination_addresses"]
+#          protocols             = rule.value["protocols"]
+#        }
+#      }
+#    }
+#  }
+#
+#  dynamic "application_rule_collection" {
+#    for_each = var.application_rule_collections
+#    content {
+#      name     = application_rule_collection.value.name //"app_rule_collection1"
+#      priority = application_rule_collection.value.priority //500
+#      action   = application_rule_collection.value.action //"Deny"
+#      dynamic "rule" {
+#        for_each = application_rule_collection.value.rules
+#        content {
+#          name              = rule.value.name
+#          dynamic "protocols" {
+#            for_each = rule.value.protocols
+#            content {
+#              type = protocols.value.type //"Http" "Http"
+#              port = protocols.value.port //80 443
+#            }
+#          }
+#          source_addresses  = rule.value.source_addresses //["10.0.0.1"]
+#          destination_fqdns = rule.value.destination_fqdns //[".microsoft.com"]
+#        }
+#      }
+#    }
+#  }
+#
+#  dynamic "nat_rule_collection" {
+#    for_each = var.nat_rule_collections
+#    content {
+#      name     = nat_rule_collection.value.rule_collection_name //"nat_rule_collection1"
+#      priority = nat_rule_collection.value.priority //300
+#      action   = nat_rule_collection.value.action //"Dnat"
+#      rule {
+#        name                = nat_rule_collection.value.rule_name //"nat_rule_collection1_rule1"
+#        protocols           = nat_rule_collection.value.rule_protocols //["TCP", "UDP"]
+#        source_addresses    = nat_rule_collection.value.rule_source_addresses //["10.0.0.1", "10.0.0.2"]
+#        destination_address = nat_rule_collection.value.rule_destination_address //"192.168.1.1"
+#        destination_ports   = nat_rule_collection.value.rule_destination_ports //["80", "1000-2000"]
+#        translated_address  = nat_rule_collection.value.rule_translated_address //"192.168.0.1"
+#        translated_port     = nat_rule_collection.value.rule_translated_port //"8080"
+#      }
+#    }
+#  }
+#
+#  depends_on = [module.firewall_policy]
+#}
+
+locals {
+  fw_diagnostic_setting_name = "firewall_diagnostic_setting"
+  map_logs_vars              = { is_enabled = true }
+}
+
+module "hub_firewall_diagnostic_setting" {
+  source                  = "../diagnostic_setting"
+  analytics_workspace_id  = var.fw_analytics_workspace_id
+  diagnostic_setting_name = local.fw_diagnostic_setting_name
+  logs                    = jsondecode(templatefile("./diagnostic_settings/firewall.json", local.map_logs_vars)).logs
+  target_resource_id      = azurerm_firewall.firewall.id
+
+  #  depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_log_analytics_workspace.fw_analytics_workspace]
+  depends_on = [azurerm_firewall.firewall]
 }
 
 

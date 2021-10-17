@@ -1,47 +1,56 @@
-variable "rg_name" {
-  type = string
+variable "resource_group_name" {
+  type        = string
   description = "Name of rg."
 }
 
 variable "location" {
-  type = string
+  type        = string
   description = "Location of rg and all the resources in the module."
 }
 
-variable "gw_subnet_id" {
-  type = string
+variable "gateway_subnet_id" {
+  type        = string
   description = "The id of the gateway subnet."
 }
 
-variable "gw_name" {
-  type = string
+variable "gateway_name" {
+  type        = string
   description = "Name of gateway."
 }
 
-variable "gw_public_ip_name" {
+variable "gateway_sku" {
+  type        = string
+  description = "The gateway sku."
+}
+variable "gateway_generation" {
+  type        = string
+  description = "The gateway generation."
+}
+
+variable "gateway_public_ip_name" {
   type        = string
   description = "Name of public ip of the gateway."
 }
 
-variable "gw_vpn_address_space" {
-  type = list(string)
+variable "gateway_vpn_address_space" {
+  type        = list(string)
   description = "Address Space of VPN gateway client."
 }
 
-variable "aad_tenant_gw" {
-  type = string
+variable "aad_tenant_gateway" {
+  type        = string
   description = "Azure active directory tenant of the gateway."
   sensitive   = true
 }
 
-variable "aad_audience_gw" {
-  type = string
+variable "aad_audience_gateway" {
+  type        = string
   description = "Azure active directory tenant of the gateway."
   sensitive   = true
 }
 
-variable "aad_issuer_gw" {
-  type = string
+variable "aad_issuer_gateway" {
+  type        = string
   description = "Azure active directory tenant of the gateway."
   sensitive   = true
 }

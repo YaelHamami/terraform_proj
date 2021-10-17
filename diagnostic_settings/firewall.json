@@ -1,19 +1,19 @@
 {
   "logs": [
     {
-      "category": "AzureFirewallNetworkRule",
+      "category"        : "AzureFirewallNetworkRule",
       "retention_policy": {
         "enabled": "${is_enabled}"
       }
     },
     {
-      "category": "AzureFirewallApplicationRule",
+      "category"        : "AzureFirewallApplicationRule",
       "retention_policy": {
         "enabled": "${is_enabled}"
       }
     },
     {
-      "category": "AzureFirewallDnsProxy",
+      "category"        : "AzureFirewallDnsProxy",
       "retention_policy": {
         "enabled": "${is_enabled}"
       }
