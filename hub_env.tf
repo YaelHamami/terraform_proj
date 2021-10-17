@@ -28,32 +28,12 @@ module "hub_vnet" {
   depends_on = [azurerm_resource_group.hub_resource_group]
 }
 
-/*resource "azurerm_virtual_network" "hub_vnet" {
-  name                = local.hub_vnet_name
-  location            = local.location
-  resource_group_name = local.resource_group_name
-  address_space       = [local.hub_vnet_address]
-
-  tags = {}
-
-  depends_on = [azurerm_resource_group.yael_proj_rg]
-}*/
-
 # Vm Subnet.
 locals {
   hub_vm_subnet_name             = "hub_vm_subnet"
   hub_vm_subnet_address          = "10.0.3.0/24"
   hub_vm_subnet_address_prefixes = ["10.0.3.0/24"]
 }
-
-/*resource "azurerm_subnet" "hub_vm_subnet" {
-  name                 = local.hub_vm_subnet_name
-  resource_group_name  = local.resource_group_name
-  virtual_network_name = local.hub_vnet_name
-  address_prefixes     = [local.hub_vm_subnet_address]
-
-  depends_on = [azurerm_virtual_network.hub_vnet]
-}*/
 
 # Vm in the hub section.
 locals {

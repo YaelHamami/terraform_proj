@@ -40,7 +40,6 @@ module "hub_gateway" {
 locals {
   map_gateway_routes = {
     fw_private_ip = module.hub_firewall.private_ip, spoke_subnet_mask = local.spoke_vnet_address
-    //gateway_subnet_mask = local.hub_gateway_subnet_address
   }
 }
 

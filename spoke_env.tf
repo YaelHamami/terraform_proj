@@ -16,7 +16,6 @@ locals {
   spoke_virtual_network_address = ["10.1.0.0/16"]
 }
 
-//TODO: צריך לנשות בכל רפרנס ל module במקום resource
 //TODO: למחוק משתנים לא נחוצים
 module "spoke_vnet" {
   source                        = "./modules/vnet"
@@ -30,32 +29,12 @@ module "spoke_vnet" {
   depends_on = [azurerm_resource_group.spoke_resource_group]
 }
 
-#resource "azurerm_virtual_network" "spoke_vnet" {
-#  name                = local.spoke_vnet_name
-#  location            = local.location
-#  resource_group_name = local.resource_group_name
-#  address_space       = [local.spoke_vnet_address]
-#
-#  tags = {}
-#
-#  depends_on = [azurerm_resource_group.yael_proj_rg]
-#}
-
 # Subnet of the spoke vnet (a vm will be in it).
 locals {
   spoke_vm_subnet_name             = "spoke-vm-subnet"
   spoke_vm_subnet_address          = "10.1.3.0/24"
   spoke_vm_subnet_address_prefixes = ["10.1.3.0/24"]
 }
-
-#resource "azurerm_subnet" "spoke_vm_subnet" {
-#  name                 = local.spoke_vm_subnet_name
-#  resource_group_name  = local.resource_group_name
-#  virtual_network_name = local.spoke_vnet_name
-#  address_prefixes     = [local.spoke_vm_subnet_address]
-#
-#  depends_on = [azurerm_virtual_network.spoke_vnet]
-#}
 
 # Vm in the spoke section.
 locals {
@@ -68,7 +47,6 @@ locals {
   spoke_vm_sku                       = "16.04-LTS"
   spoke_vm_version                   = "latest"
   spoke_vm_disk_storage_account_type = "Standard_LRS"
-  #  spoke_vm_enable_ip_forwarding = false
 }
 
 module "vm_of_spoke" {
@@ -93,15 +71,11 @@ module "vm_of_spoke" {
   admin_username = var.vm_username
 
   depends_on = [module.spoke_vnet]
-
-  #  enable_ip_forwarding = local.spoke_vm_enable_ip_forwarding
 }
 
 # Nsg of spoke.
 locals {
   spoke_nsg_security_rules = {
-    //fw_public_ip    = module.hub_firewall.fw_public_ip,
-    //spoke_subnet_mask = local.spoke_vnet_address,
     hub_subnet_mask     = local.hub_vnet_address,
     gateway_subnet_mask = local.hub_gateway_vpn_address_space[0]
   }
