@@ -14,7 +14,7 @@
       "create_option"       : "Empty",
       "disk_size_gb"        : 20,
       "lun"                 : "20",
-      "caching"             : "Read"
+      "caching"             : "ReadOnly"
     }
   ]
 }

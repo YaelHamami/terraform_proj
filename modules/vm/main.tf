@@ -54,22 +54,24 @@ resource "azurerm_linux_virtual_machine" "vm" {
   depends_on = [azurerm_network_interface.nic]
 }
 
-#resource "azurerm_managed_disk" "managed_disk" {
-#  for_each             = toset(var.managed_disks)
-#  name                 = each.value.name
-#  location             = var.location
-#  resource_group_name  = var.resource_group_name
-#  storage_account_type = each.value.storage_account_type //"Standard_LRS"
-#  create_option        = each.value.create_option //"Empty"
-#  disk_size_gb         = each.value.disk_size_gb //10
-#}
-#
-#resource "azurerm_virtual_machine_data_disk_attachment" "example" {
-#  for_each             = toset(var.managed_disks)
-#  managed_disk_id    = azurerm_managed_disk.managed_disk.id
-#  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
-#  lun                = each.value.lun
-#  caching            = each.value.caching
-#}
+resource "azurerm_managed_disk" "managed_disk" {
+  count                = length(var.managed_disks)
+  name                 = var.managed_disks[count.index].name
+  location             = var.location
+  resource_group_name  = var.resource_group_name
+  storage_account_type = var.managed_disks[count.index].storage_account_type
+  create_option        = var.managed_disks[count.index].create_option
+  disk_size_gb         = var.managed_disks[count.index].disk_size_gb
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "example" {
+  count              = length(var.managed_disks)
+  managed_disk_id    = azurerm_managed_disk.managed_disk[count.index].id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
+  lun                = var.managed_disks[count.index].lun
+  caching            = var.managed_disks[count.index].caching
+
+  depends_on = [azurerm_managed_disk.managed_disk]
+}
 
 

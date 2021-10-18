@@ -34,4 +34,3 @@ resource "azurerm_virtual_network_peering" "peer_spoke_to_hub" {
   depends_on = [module.hub_vnet, module.spoke_vnet, module.hub_gateway]
 }
 
-

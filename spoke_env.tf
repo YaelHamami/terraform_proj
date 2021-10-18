@@ -70,7 +70,8 @@ module "vm_of_spoke" {
   admin_password = var.vm_password
   admin_username = var.vm_username
 
-  depends_on = [module.spoke_vnet]
+  depends_on    = [module.spoke_vnet]
+  managed_disks = toset([])
 }
 
 # Nsg of spoke.
@@ -82,12 +83,14 @@ locals {
 }
 
 module "spoke_network_security_group" {
-  source               = "./modules/nsg"
-  security_group_name  = "spoke_network_security_group"
-  location             = local.location
-  resource_group_name  = local.spoke_resource_group_name
-  security_rules       = jsondecode(templatefile("./network_security_rules/spoke.json", local.spoke_nsg_security_rules)).security_rules
-  associated_subnet_id = module.spoke_vnet.sub-virtual_network_id //azurerm_subnet.spoke_vm_subnet.id
+  source              = "./modules/nsg"
+  security_group_name = "spoke_network_security_group"
+  location            = local.location
+  resource_group_name = local.spoke_resource_group_name
+  security_rules      = jsondecode(templatefile("./network_security_rules/spoke.json", local.spoke_nsg_security_rules)).security_rules
+
+  #  associated_subnet_id   = module.spoke_vnet.sub-virtual_network_id //azurerm_subnet.spoke_vm_subnet.id
+  associated_subnets_ids = [module.spoke_vnet.sub-virtual_network_id]
 
   depends_on = [azurerm_resource_group.spoke_resource_group, module.spoke_vnet]
 }

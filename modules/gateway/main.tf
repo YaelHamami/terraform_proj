@@ -1,4 +1,3 @@
-//TODO: לשנות לסטטי (אמור לעבוד)
 locals {
   gateway_public_ip_allocation_method = "Dynamic"
 }

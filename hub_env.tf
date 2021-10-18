@@ -15,7 +15,7 @@ locals {
   hub_vnet_address            = "10.0.0.0/16"
   hub_vnet_name               = "hub-vnet"
 }
-//TODO: צריך לנשות בכל רפרנס ל module במקום resource
+
 module "hub_vnet" {
   source                        = "./modules/vnet"
   location                      = local.location
@@ -46,7 +46,6 @@ locals {
   hub_vm_sku                       = "16.04-LTS"
   hub_vm_version                   = "latest"
   hub_vm_disk_storage_account_type = "Standard_LRS"
-  #  hub_vm_enable_ip_forwarding = true
 }
 
 module "vm_of_hub" {
@@ -54,7 +53,6 @@ module "vm_of_hub" {
   location            = local.location
   resource_group_name = local.hub_resource_group_name
   nic_name            = local.hub_nic_name
-  // enable_ip_forwarding = local.hub_vm_enable_ip_forwarding
 
   vm_name                      = local.hub_vm_name
   vm_image_offer               = local.hub_vm_offer
@@ -70,7 +68,8 @@ module "vm_of_hub" {
   admin_password = var.vm_password
   admin_username = var.vm_username
 
-  depends_on = [module.hub_vnet]
+  depends_on    = [module.hub_vnet]
+  managed_disks = jsondecode(file("./data_disks/example.json")).managed_disks
 }
 
 #Hub nsg to vm subnet.
@@ -81,12 +80,14 @@ locals {
 }
 
 module "hub_network_security_group" {
-  source               = "./modules/nsg"
-  security_group_name  = "hub_network_security_group"
-  location             = local.location
-  associated_subnet_id = module.hub_vnet.sub-virtual_network_id
-  resource_group_name  = local.hub_resource_group_name
-  security_rules       = jsondecode(templatefile("./network_security_rules/hub.json", local.hub_nsg_security_rules)).security_rules
+  source              = "./modules/nsg"
+  security_group_name = "hub_network_security_group"
+  location            = local.location
+
+  associated_subnets_ids = [module.hub_vnet.sub-virtual_network_id]
+
+  resource_group_name = local.hub_resource_group_name
+  security_rules      = jsondecode(templatefile("./network_security_rules/hub.json", local.hub_nsg_security_rules)).security_rules
 
   depends_on = [azurerm_resource_group.hub_resource_group, module.hub_vnet]
 }

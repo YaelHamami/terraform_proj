@@ -68,14 +68,14 @@ variable "admin_password" {
   description = "Admin password of the vm."
 }
 
-#variable "managed_disks" {
-#  type = list(object({
-#    name                 = string
-#    storage_account_type = string,
-#    create_option        = string,
-#    disk_size_gb         = string,
-#    lun                  = string,
-#    caching              = string
-#  }))
-#}
+variable "managed_disks" {
+  type = list(object({
+    name                 = string
+    storage_account_type = string,
+    create_option        = string,
+    disk_size_gb         = string,
+    lun                  = string,
+    caching              = string
+  }))
+}
 

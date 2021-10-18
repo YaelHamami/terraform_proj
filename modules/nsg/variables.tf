@@ -13,11 +13,6 @@ variable "location" {
   description = "Location of rg and all the resources in the module."
 }
 
-variable "associated_subnet_id" {
-  type        = string
-  description = "The id of subnet in which the nsg will associate with."
-}
-
 variable "security_rules" {
   type = list(object({
     name                       = string,
@@ -25,11 +20,13 @@ variable "security_rules" {
     direction                  = string,
     access                     = string,
     protocol                   = string,
-    source_port_range          = string,
-    //source_port_ranges         = string,//list(string),
-    destination_port_range     = string,
+    //source_port_range          = string,
+    source_port_ranges         = list(string),
+    //destination_port_range     = string,
+    destination_port_ranges    = list(string),
     source_address_prefix      = string,
     destination_address_prefix = string,
   }))
+  description = "List of the ids of subnets in which the nsg will associate with."
 }
 

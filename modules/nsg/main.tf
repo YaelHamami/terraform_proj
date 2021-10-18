@@ -1,6 +1,6 @@
 # Nsg of spoke section.
 resource "azurerm_network_security_group" "network_security_group" {
-  name                = var.security_group_name//"spoke_subnet_security_group"
+  name                = var.security_group_name
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -13,8 +13,8 @@ resource "azurerm_network_security_group" "network_security_group" {
       direction                  = security_rule.value["direction"]
       access                     = security_rule.value["access"]
       protocol                   = security_rule.value["protocol"]
-      source_port_range          = security_rule.value["source_port_range"]
-      destination_port_range     = security_rule.value["destination_port_range"]
+      source_port_ranges         = security_rule.value["source_port_ranges"]
+      destination_port_ranges    = security_rule.value["destination_port_ranges"]
       source_address_prefix      = security_rule.value["source_address_prefix"]
       destination_address_prefix = security_rule.value["destination_address_prefix"]
     }
@@ -23,10 +23,15 @@ resource "azurerm_network_security_group" "network_security_group" {
   tags = {}
 }
 
-resource "azurerm_subnet_network_security_group_association" "spoke_nsg_association" {
-  subnet_id                 = var.associated_subnet_id
+variable "associated_subnets_ids" {
+  type = list(string)
+  description = "list of ids to associate with the network security group."
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg_association" {
+  for_each = toset(var.associated_subnets_ids)
+  subnet_id                 = each.value
   network_security_group_id = azurerm_network_security_group.network_security_group.id
 
   depends_on = [azurerm_network_security_group.network_security_group]
 }
-

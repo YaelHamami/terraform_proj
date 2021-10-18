@@ -15,8 +15,6 @@ resource "azurerm_subnet" "hub_AzureFirewallSubnet" {
 #Workspace
 locals {
   firewall_analytics_workspace_name = "firewall-analytics-workspace"
-  #  fw_diagnostic_setting_name  = "firewall_diagnostic_setting"
-  #  map_logs_vars               = { is_enabled = true }
 }
 
 resource "azurerm_log_analytics_workspace" "firewall_analytics_workspace" {
@@ -40,32 +38,23 @@ locals {
 module "hub_firewall" {
   source = "./modules/firewall"
 
-  location                  = local.location
-  firewall_policy_name      = "hub_firewall_policy"
-  firewall_public_ip_name   = "hub_firewall_public_ip"
-  public_ip_sku             = "Standard"
-  network_rules             = jsondecode(templatefile("./rule_collections/hub_fw_network_rules.json", local.map_firewall_network_rules_vars)).rules
-  resource_group_name       = local.hub_resource_group_name
-  subnet_id                 = azurerm_subnet.hub_AzureFirewallSubnet.id
-  priority_rule             = local.priority_rule
-  rule_collection_name      = "allow_tcp"
-  fw_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_analytics_workspace.id
+  location                       = local.location
+  firewall_policy_name           = "hub_firewall_policy"
+  firewall_public_ip_name        = "hub_firewall_public_ip"
+  public_ip_sku                  = "Standard"
+  resource_group_name            = local.hub_resource_group_name
+  subnet_id                      = azurerm_subnet.hub_AzureFirewallSubnet.id
+  priority_rule_collection_group = local.priority_rule
+  rule_collection_name           = "allow_tcp"
+  fw_analytics_workspace_id      = azurerm_log_analytics_workspace.firewall_analytics_workspace.id
+
+  application_rule_collections = jsondecode(file("./rule_collections/hub_firewall_application_rules.json")).application_rule_collections
+  nat_rule_collections         = jsondecode(file("./rule_collections/hub_firewall_nat_rules.json")).nat_rule_collections
+  network_rule_collections     = jsondecode(templatefile("./rule_collections/hub_firewall_network_rules.json", local.map_firewall_network_rules_vars)).network_rule_collections
 
   depends_on = [
     azurerm_resource_group.hub_resource_group,
     azurerm_subnet.hub_AzureFirewallSubnet,
     azurerm_log_analytics_workspace.firewall_analytics_workspace
   ]
-
 }
-
-#module "hub_fw_diagnostic_setting" {
-#  source                  = "./modules/diagnostic_setting"
-#  analytics_workspace_id  = azurerm_log_analytics_workspace.fw_analytics_workspace.id
-#  diagnostic_setting_name = local.fw_diagnostic_setting_name
-#  logs                    = jsondecode(templatefile("./diagnostic_settings/firewall.json", local.map_logs_vars)).logs
-#  target_resource_id      = module.hub_firewall.fw_id
-#
-#  depends_on = [azurerm_resource_group.yael_proj_rg, azurerm_log_analytics_workspace.fw_analytics_workspace]
-#  #  depends_on = [module.hub_firewall]
-#}
