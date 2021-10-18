@@ -6,6 +6,6 @@ output "id" {
   value = azurerm_route_table.route_table.id
 }
 
-output "route_table" {
+output "object" {
   value = azurerm_route_table.route_table
 }

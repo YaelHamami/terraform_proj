@@ -14,6 +14,6 @@ output "name" {
   value = azurerm_firewall.firewall.name
 }
 
-output "firewall" {
+output "object" {
   value = azurerm_firewall.firewall
 }

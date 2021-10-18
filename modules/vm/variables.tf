@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   type        = string
-  description = "Name of rg."
+  description = "The resource group name."
 }
 
 variable "location" {
@@ -16,6 +16,11 @@ variable "vm_subnet_id" {
 variable "vm_name" {
   type        = string
   description = "Name of vm."
+}
+
+variable "computer_name" {
+  type = string
+  description = "The computer name."
 }
 
 variable "vm_size" {
@@ -68,7 +73,7 @@ variable "admin_password" {
   description = "Admin password of the vm."
 }
 
-variable "managed_disks" {
+variable "managed_data_disks" {
   type = list(object({
     name                 = string
     storage_account_type = string,

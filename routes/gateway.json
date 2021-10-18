@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "name"                  : "gateway_to_firewall",
+      "name"                  : "GatewayToFirewall",
       "address_prefix"        : "${spoke_subnet_mask}",
       "next_hop_type"         : "VirtualAppliance",
       "next_hop_in_ip_address": "${fw_private_ip}"

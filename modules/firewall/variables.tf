@@ -13,7 +13,7 @@ variable "firewall_policy_name" {
   description = "The firewall policy name."
 }
 
-variable "firewall_public_ip_name" {
+variable "public_ip_name" {
   type        = string
   description = "Name of public ip of the firewall."
 }
@@ -28,6 +28,18 @@ variable "subnet_id" {
   description = "Id of the subnet of the firewall."
 }
 
+variable "firewall_name" {
+  type = string
+  description = "The firewall name."
+}
+
+# Workspace vars.
+variable "analytics_workspace_id" {
+  type        = string
+  description = "The analytic workspace id."
+}
+
+# Rule collection vars.
 variable "rule_collection_name" {
   type        = string
   description = "The rule name."
@@ -36,12 +48,6 @@ variable "rule_collection_name" {
 variable "priority_rule_collection_group" {
   type        = string
   description = "The priority of the rule collection group."
-}
-
-# Workspace vars.
-variable "fw_analytics_workspace_id" {
-  type        = string
-  description = "The analytic workspace id."
 }
 
 variable "network_rule_collections" {

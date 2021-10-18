@@ -5,7 +5,7 @@ variable "security_group_name" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of rg."
+  description = "The resource group name."
 }
 
 variable "location" {
@@ -20,13 +20,18 @@ variable "security_rules" {
     direction                  = string,
     access                     = string,
     protocol                   = string,
-    //source_port_range          = string,
+    //source_port_range          = optional(string),
     source_port_ranges         = list(string),
-    //destination_port_range     = string,
+    //destination_port_range     = optional(string),
     destination_port_ranges    = list(string),
     source_address_prefix      = string,
     destination_address_prefix = string,
   }))
   description = "List of the ids of subnets in which the nsg will associate with."
+}
+
+variable "associated_subnets_ids" {
+  type = list(string)
+  description = "list of ids to associate with the network security group."
 }
 

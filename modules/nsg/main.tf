@@ -23,15 +23,10 @@ resource "azurerm_network_security_group" "network_security_group" {
   tags = {}
 }
 
-variable "associated_subnets_ids" {
-  type = list(string)
-  description = "list of ids to associate with the network security group."
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg_association" {
-  for_each = toset(var.associated_subnets_ids)
-  subnet_id                 = each.value
-  network_security_group_id = azurerm_network_security_group.network_security_group.id
-
-  depends_on = [azurerm_network_security_group.network_security_group]
-}
+#resource "azurerm_subnet_network_security_group_association" "nsg_association" {
+#  for_each = toset(var.associated_subnets_ids)
+#  subnet_id                 = each.value
+#  network_security_group_id = azurerm_network_security_group.network_security_group.id
+#
+#  depends_on = [azurerm_network_security_group.network_security_group]
+#}

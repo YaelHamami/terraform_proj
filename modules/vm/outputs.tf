@@ -6,6 +6,6 @@ output "id" {
   value = azurerm_linux_virtual_machine.vm.id
 }
 
-output "vm" {
+output "object" {
   value = azurerm_linux_virtual_machine.vm
 }

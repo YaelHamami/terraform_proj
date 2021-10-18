@@ -6,6 +6,6 @@ output "name" {
   value = azurerm_monitor_diagnostic_setting.firewall_diagnostic_setting.name
 }
 
-output "diagnostic_setting" {
+output "object" {
   value = azurerm_monitor_diagnostic_setting.firewall_diagnostic_setting
 }

@@ -6,6 +6,6 @@ output "id" {
   value = azurerm_network_security_group.network_security_group.id
 }
 
-output "network_security_group" {
+output "object" {
   value = azurerm_network_security_group.network_security_group
 }
