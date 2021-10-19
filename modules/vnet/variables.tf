@@ -17,12 +17,3 @@ variable "resource_group_name" {
   description = "The resource group name of all module's resources."
 }
 
-variable "subnet_name" {
-  type        = string
-  description = "List of addresses for the SUB-virtual network."
-}
-
-variable "subnet_address_prefixes" {
-  type        = list(string)
-  description = "List of addresses for the SUB-virtual network."
-}

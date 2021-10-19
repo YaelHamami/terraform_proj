@@ -1,7 +1,6 @@
 # The location var is for all resources in the project.
 locals {
   spoke_resource_group_name = "proj-spoke-resource-group"
-  location                  = "West Europe"
 }
 
 resource "azurerm_resource_group" "spoke_resource_group" {
@@ -11,43 +10,22 @@ resource "azurerm_resource_group" "spoke_resource_group" {
   tags = {}
 }
 
-## Spoke vnet.
-#locals {
-#  spoke_vnet_name               = "spoke-vnet"
-#  spoke_vnet_address            = "10.1.0.0/16"
-#  spoke_vm_subnet_name             = "spokeVmSubnet"
-#  spoke_vm_subnet_address          = "10.1.3.0/24"
-##  spoke_virtual_network_address = ["10.1.0.0/16"]
-#}
-#
-#module "spoke_vnet" {
-#  source                        = "./modules/vnet"
-#  location                      = local.location
-#  resource_group_name           = local.spoke_resource_group_name
-#  subnet_address_prefixes       = [local.spoke_vm_subnet_address]
-#  subnet_name                   = local.spoke_vm_subnet_name
-#  virtual_network_address_space = [local.spoke_vnet_address]
-#  virtual_network_name          = local.spoke_vnet_name
-#
-#  depends_on = [azurerm_resource_group.spoke_resource_group]
-#}
-
 # Spoke vnet.
 locals {
   spoke_vnet_name    = "spoke-vnet"
   spoke_vnet_address = "10.1.0.0/16"
-  #  spoke_virtual_network_address = ["10.1.0.0/16"]
+  spoke_subnets      = {
+    vm = { name = local.spoke_vm_subnet_name, address_prefixes = [local.spoke_vm_subnet_address] }
+  }
 }
 
-//TODO: למחוק משתנים לא נחוצים
 module "spoke_vnet" {
   source                        = "./modules/vnet"
   location                      = local.location
   resource_group_name           = local.spoke_resource_group_name
-  subnet_address_prefixes       = [local.spoke_vm_subnet_address]
-  subnet_name                   = local.spoke_vm_subnet_name
   virtual_network_address_space = [local.spoke_vnet_address]
   virtual_network_name          = local.spoke_vnet_name
+  subnets                       = local.spoke_subnets
 
   depends_on = [azurerm_resource_group.spoke_resource_group]
 }
@@ -56,12 +34,6 @@ module "spoke_vnet" {
 locals {
   spoke_vm_subnet_name    = "spokeVmSubnet"
   spoke_vm_subnet_address = "10.1.3.0/24"
-  #  spoke_vm_subnet_address_prefixes = ["10.1.3.0/24"]
-}
-
-# Subnet of the spoke vnet (a vm will be in it).
-locals {
-  #  spoke_vm_subnet_address_prefixes = ["10.1.3.0/24"]
 }
 
 # Vm in the spoke section.
@@ -95,7 +67,7 @@ module "vm_of_spoke" {
   vm_disk_storage_account_type = local.spoke_vm_disk_storage_account_type
 
   vm_size      = local.spoke_vm_size
-  vm_subnet_id = module.spoke_vnet.sub_virtual_network_id
+  vm_subnet_id = module.spoke_vnet.subnets_ids["spokeVmSubnet"]
 
   admin_password = var.vm_password
   admin_username = var.vm_username
@@ -119,9 +91,7 @@ module "spoke_network_security_group" {
   location            = local.location
   resource_group_name = local.spoke_resource_group_name
   security_rules      = jsondecode(templatefile("./network_security_rules/spoke.json", local.spoke_nsg_security_rules)).security_rules
-
-  #  associated_subnet_id   = module.spoke_vnet.sub-virtual_network_id //azurerm_subnet.spoke_vm_subnet.id
-  associated_subnets_ids = [module.spoke_vnet.sub_virtual_network_id]
+  associated_subnets_ids = [module.spoke_vnet.subnets_ids["spokeVmSubnet"]]
 
   depends_on = [azurerm_resource_group.spoke_resource_group, module.spoke_vnet]
 }
@@ -135,7 +105,7 @@ locals {
 
 module "spoke_route_table" {
   source               = "./modules/route_table"
-  associated_subnet_id = module.spoke_vnet.sub_virtual_network_id
+  associated_subnet_id = module.spoke_vnet.subnets_ids["spokeVmSubnet"]
   location             = local.location
   resource_group_name  = local.spoke_resource_group_name
   routes               = jsondecode(templatefile("./routes/spoke.json", local.map_spoke_routes)).routes
@@ -166,6 +136,5 @@ module "tow_way_peering_hub_to_spoke" {
   allow_forwarded_traffic_vnet2 = true
   use_remote_gateways_vnet2     = true
 
-  depends_on = [module.hub_vnet, module.spoke_vnet]
-
+  depends_on = [module.hub_vnet, module.spoke_vnet, module.hub_gateway]
 }

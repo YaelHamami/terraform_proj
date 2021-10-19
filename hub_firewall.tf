@@ -3,14 +3,6 @@ locals {
   firewall_subnet_name    = "AzureFirewallSubnet"
   firewall_subnet_address = "10.0.4.0/26"
 }
-resource "azurerm_subnet" "hubAzureFirewallSubnet" {
-  name                 = local.firewall_subnet_name
-  resource_group_name  = local.hub_resource_group_name
-  virtual_network_name = local.hub_vnet_name
-  address_prefixes     = [local.firewall_subnet_address]
-
-  depends_on = [module.hub_vnet]
-}
 
 #Workspace
 locals {
@@ -39,7 +31,7 @@ locals {
   firewall_policy_name          = "hub-firewall-policy"
   firewall_public_ip_name       = "hub-firewall-public-ip"
   firewall_public_ip_sku        = "Standard"
-  firewall_rule_collection_name = "allow_tcp"
+  firewall_rule_collection_name = "allowTcp"
   firewall_name                 = "hub-firewall"
 }
 
@@ -51,7 +43,7 @@ module "hub_firewall" {
   public_ip_name                 = local.firewall_public_ip_name
   public_ip_sku                  = local.firewall_public_ip_sku
   resource_group_name            = local.hub_resource_group_name
-  subnet_id                      = azurerm_subnet.hubAzureFirewallSubnet.id
+  subnet_id                      = module.hub_vnet.subnets_ids["AzureFirewallSubnet"]
   priority_rule_collection_group = local.priority_rule
   rule_collection_name           = local.firewall_rule_collection_name
   analytics_workspace_id         = azurerm_log_analytics_workspace.firewall_analytics_workspace.id
@@ -62,7 +54,7 @@ module "hub_firewall" {
 
   depends_on = [
     azurerm_resource_group.hub_resource_group,
-    azurerm_subnet.hubAzureFirewallSubnet,
+    module.hub_vnet,
     azurerm_log_analytics_workspace.firewall_analytics_workspace
   ]
 }

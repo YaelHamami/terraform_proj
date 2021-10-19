@@ -1,0 +1,10 @@
+formatter: markdown
+content: |-
+  {{ .Header }}
+  ## Usage
+  ```hcl
+  {{ include "..\..\examples\vnet.tf" }}
+  ```
+  {{ .Inputs }}
+  {{ .Outputs }}
+

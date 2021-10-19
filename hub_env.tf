@@ -1,35 +1,33 @@
-# Resource group section.
+## Resource group section.
 locals {
   hub_resource_group_name = "proj-hub-resource-group"
+  location                  = "West Europe"
 }
-
+#
 resource "azurerm_resource_group" "hub_resource_group" {
   name     = local.hub_resource_group_name
   location = local.location
 
   tags = {}
 }
-# Hub vnet section.
+## Hub vnet section.
 locals {
-  #  hub_virtual_network_address = ["10.0.0.0/16"]
   hub_vnet_address = "10.0.0.0/16"
   hub_vnet_name    = "hub-vnet"
-  hub_subnets      = [
-    { name = "hubVmSubnet", address_prefixes = "10.0.3.0/24" },
-    { name = "AzureFirewallSubnet", address_prefixes = "10.0.4.0/26" },
-    { name = "GatewaySubnet", address_prefixes = "10.0.2.0/24" }
-  ]
+  hub_subnets      = {
+    vm       = { name = "hubVmSubnet", address_prefixes = [local.hub_vm_subnet_address] },
+    firewall = { name = "AzureFirewallSubnet", address_prefixes = [local.firewall_subnet_address] },
+    gateway  = { name = "GatewaySubnet", address_prefixes = [local.hub_gateway_subnet_address] }
+  }
 }
 
 module "hub_vnet" {
   source                        = "./modules/vnet"
   location                      = local.location
   resource_group_name           = local.hub_resource_group_name
-  subnet_address_prefixes       = [local.hub_vm_subnet_address]
-  subnet_name                   = local.hub_vm_subnet_name
   virtual_network_address_space = [local.hub_vnet_address]
   virtual_network_name          = local.hub_vnet_name
-   #  subnets = local.hub_subnets
+  subnets                       = local.hub_subnets
 
   depends_on = [azurerm_resource_group.hub_resource_group]
 }
@@ -38,7 +36,6 @@ module "hub_vnet" {
 locals {
   hub_vm_subnet_name    = "hubVmSubnet"
   hub_vm_subnet_address = "10.0.3.0/24"
-  #  hub_vm_subnet_address_prefixes = ["10.0.3.0/24"]
 }
 
 # Vm in the hub section.
@@ -69,15 +66,15 @@ module "vm_of_hub" {
   vm_image_version             = local.hub_vm_version
   vm_disk_caching              = local.hub_vm_disk_caching
   vm_disk_storage_account_type = local.hub_vm_disk_storage_account_type
-  managed_data_disks = jsondecode(file("./data_disks/example.json")).managed_data_disks
+  managed_data_disks           = jsondecode(file("./data_disks/example.json")).managed_data_disks
 
   vm_size      = local.hub_vm_size
-  vm_subnet_id = module.hub_vnet.sub_virtual_network_id
+  vm_subnet_id = module.hub_vnet.subnets_ids["hubVmSubnet"]
 
   admin_password = var.vm_password
   admin_username = var.vm_username
 
-  depends_on         = [module.hub_vnet]
+  depends_on = [module.hub_vnet]
 }
 
 #Hub nsg to vm subnet.
@@ -93,7 +90,7 @@ module "hub_network_security_group" {
   security_group_name = local.hub_security_group_name
   location            = local.location
 
-  associated_subnets_ids = [module.hub_vnet.sub_virtual_network_id]
+  associated_subnets_ids = [module.hub_vnet.subnets_ids["hubVmSubnet"]]
 
   resource_group_name = local.hub_resource_group_name
   security_rules      = jsondecode(templatefile("./network_security_rules/hub.json", local.hub_nsg_security_rules)).security_rules
@@ -110,7 +107,7 @@ locals {
 
 module "hub_route_table" {
   source               = "./modules/route_table"
-  associated_subnet_id = module.hub_vnet.sub_virtual_network_id
+  associated_subnet_id = module.hub_vnet.subnets_ids["hubVmSubnet"]
   location             = local.location
   resource_group_name  = local.hub_resource_group_name
   routes               = jsondecode(templatefile("./routes/hub.json", local.map_hub_routes)).routes

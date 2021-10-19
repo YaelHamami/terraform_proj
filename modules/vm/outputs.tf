@@ -1,11 +1,13 @@
 output "name" {
-  value = azurerm_linux_virtual_machine.vm.name
+  value =  var.is_linux ? azurerm_linux_virtual_machine.vm[0].name : azurerm_windows_virtual_machine.vm[0].name
 }
 
 output "id" {
-  value = azurerm_linux_virtual_machine.vm.id
+  value =  var.is_linux ? azurerm_linux_virtual_machine.vm[0].id : azurerm_windows_virtual_machine.vm[0].id
 }
 
-output "object" {
-  value = azurerm_linux_virtual_machine.vm
+output "private_ip" {
+  value = azurerm_network_interface.nic.private_ip_address
 }
+
+

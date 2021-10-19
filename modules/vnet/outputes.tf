@@ -10,14 +10,10 @@ output "virtual_network" {
   value = azurerm_virtual_network.virtual_network
 }
 
-output "sub_virtual_network_id" {
-  value = azurerm_subnet.subnet.id
+output "subnets_ids" {
+  value = {for subnet in azurerm_subnet.subnets : subnet.name => subnet.id}
 }
 
-output "sub_virtual_network_name" {
-  value = azurerm_subnet.subnet.name
-}
-
-output "sub_virtual_network" {
-  value = azurerm_subnet.subnet
+output "subnets" {
+  value = azurerm_subnet.subnets
 }

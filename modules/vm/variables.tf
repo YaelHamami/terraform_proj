@@ -13,13 +13,19 @@ variable "vm_subnet_id" {
   description = "The id of the subnet the vm will be in."
 }
 
+variable "is_linux" {
+  type        = bool
+  description = "Is the vm has Linux os or Windows."
+  default     = true
+}
+
 variable "vm_name" {
   type        = string
   description = "Name of vm."
 }
 
 variable "computer_name" {
-  type = string
+  type        = string
   description = "The computer name."
 }
 

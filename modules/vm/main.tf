@@ -23,7 +23,10 @@ locals {
   admin_password = var.admin_password
 }
 
+# Linux VM.
 resource "azurerm_linux_virtual_machine" "vm" {
+  count                 = var.is_linux ? 1 : 0
+
   computer_name         = var.computer_name
   name                  = var.vm_name
   location              = var.location
@@ -54,6 +57,38 @@ resource "azurerm_linux_virtual_machine" "vm" {
   depends_on = [azurerm_network_interface.nic]
 }
 
+# Windows vm.
+resource "azurerm_windows_virtual_machine" "vm" {
+  count = var.is_linux ? 0 : 1
+
+  name                = var.vm_name
+  computer_name       = var.computer_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  size                = var.vm_size
+  admin_username      = local.admin_username
+  admin_password      = local.admin_password
+
+  network_interface_ids = [azurerm_network_interface.nic.id]
+
+  os_disk {
+    name                 = local.disk_name
+    caching              = var.vm_disk_caching
+    storage_account_type = var.vm_disk_storage_account_type
+  }
+
+  source_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2016-Datacenter"
+    version   = "latest"
+  }
+
+  tags = {}
+
+  depends_on = [azurerm_network_interface.nic]
+}
+
 resource "azurerm_managed_disk" "managed_data_disk" {
   count                = length(var.managed_data_disks)
   name                 = var.managed_data_disks[count.index].name
@@ -67,11 +102,11 @@ resource "azurerm_managed_disk" "managed_data_disk" {
 resource "azurerm_virtual_machine_data_disk_attachment" "example" {
   count              = length(var.managed_data_disks)
   managed_disk_id    = azurerm_managed_disk.managed_data_disk[count.index].id
-  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
+  virtual_machine_id = var.is_linux ? azurerm_linux_virtual_machine.vm[0].id : azurerm_windows_virtual_machine.vm[0].id
   lun                = var.managed_data_disks[count.index].lun
   caching            = var.managed_data_disks[count.index].caching
 
-  depends_on = [azurerm_managed_disk.managed_data_disk]
+  depends_on = [azurerm_managed_disk.managed_data_disk, azurerm_linux_virtual_machine.vm]
 }
 
 

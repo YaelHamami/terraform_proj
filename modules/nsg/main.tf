@@ -23,10 +23,10 @@ resource "azurerm_network_security_group" "network_security_group" {
   tags = {}
 }
 
-#resource "azurerm_subnet_network_security_group_association" "nsg_association" {
-#  for_each = toset(var.associated_subnets_ids)
-#  subnet_id                 = each.value
-#  network_security_group_id = azurerm_network_security_group.network_security_group.id
-#
-#  depends_on = [azurerm_network_security_group.network_security_group]
-#}
+resource "azurerm_subnet_network_security_group_association" "nsg_association" {
+  count = length(var.associated_subnets_ids)
+  subnet_id                 = var.associated_subnets_ids[count.index]
+  network_security_group_id = azurerm_network_security_group.network_security_group.id
+
+  depends_on = [azurerm_network_security_group.network_security_group]
+}

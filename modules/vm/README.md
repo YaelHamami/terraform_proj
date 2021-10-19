@@ -31,6 +31,7 @@ No modules.
 | <a name="input_admin_password"></a> [admin\_password](#input\_admin\_password) | Admin password of the vm. | `string` | n/a | yes |
 | <a name="input_admin_username"></a> [admin\_username](#input\_admin\_username) | Admin username of the vm. | `string` | n/a | yes |
 | <a name="input_computer_name"></a> [computer\_name](#input\_computer\_name) | The computer name. | `string` | n/a | yes |
+| <a name="input_is_linux"></a> [is\_linux](#input\_is\_linux) | Is the vm has Linux os or Windows. | `bool` | `true` | no |
 | <a name="input_location"></a> [location](#input\_location) | Location of rg and all the resources in the module. | `string` | n/a | yes |
 | <a name="input_managed_data_disks"></a> [managed\_data\_disks](#input\_managed\_data\_disks) | n/a | <pre>list(object({<br>    name                 = string<br>    storage_account_type = string,<br>    create_option        = string,<br>    disk_size_gb         = string,<br>    lun                  = string,<br>    caching              = string<br>  }))</pre> | n/a | yes |
 | <a name="input_nic_name"></a> [nic\_name](#input\_nic\_name) | Name of nic. | `string` | n/a | yes |
@@ -47,9 +48,5 @@ No modules.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | n/a |
-| <a name="output_name"></a> [name](#output\_name) | n/a |
-| <a name="output_object"></a> [object](#output\_object) | n/a |
+No outputs.
 <!-- END_TF_DOCS -->

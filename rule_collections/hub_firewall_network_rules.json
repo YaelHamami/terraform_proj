@@ -1,26 +1,26 @@
 {
   "network_rule_collections": [
     {
-      "name"    : "allow_tcp",
+      "name"    : "allowTcp",
       "priority": 300,
       "action"  : "Allow",
       "rules"   : [
         {
-          "name"                 : "allow_tcp_hub_to_spoke",
+          "name"                 : "allowTcpHubToSpoke",
           "source_addresses"     : ["${hub_subnet_mask}"],
           "destination_ports"    : ["22"],
           "destination_addresses": ["${spoke_subnet_mask}"],
           "protocols"            : ["TCP"]
         },
         {
-          "name"                 : "allow_tcp_spoke_to_hub",
+          "name"                 : "allowTcpSpokeToHub",
           "source_addresses"     : ["${spoke_subnet_mask}"],
           "destination_ports"    : ["22"],
           "destination_addresses": ["${hub_subnet_mask}"],
           "protocols"            : ["TCP"]
         },
         {
-          "name"                 : "allow_tcp_gateway_to_spoke",
+          "name"                 : "allowTcpGatewayToSpoke",
           "source_addresses"     : ["${gateway_subnet_mask}"],
           "destination_ports"    : ["22"],
           "destination_addresses": ["${spoke_subnet_mask}"],

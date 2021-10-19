@@ -29,7 +29,7 @@ variable "subnet_id" {
 }
 
 variable "firewall_name" {
-  type = string
+  type        = string
   description = "The firewall name."
 }
 

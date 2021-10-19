@@ -1,6 +1,6 @@
-#locals {
-#  firewall_policy_threat_intelligence_mode = "Deny"
-#}
+locals {
+  firewall_policy_threat_intelligence_mode = "Deny"
+}
 
 # Firewall policy.
 resource "azurerm_firewall_policy" "firewall_policy" {
@@ -8,7 +8,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   resource_group_name = var.resource_group_name
   location            = var.location
 
-#  threat_intelligence_mode = local.firewall_policy_threat_intelligence_mode
+  threat_intelligence_mode = local.firewall_policy_threat_intelligence_mode
 
   tags = {}
 }
@@ -16,13 +16,12 @@ resource "azurerm_firewall_policy" "firewall_policy" {
 # Firewall Rules.
 locals {
 #  rule_collection_action     = "Allow"
-  rule_collection_group_name = "${azurerm_firewall_policy.firewall_policy.name}_rule_collection"
+  rule_collection_group_name = "${azurerm_firewall_policy.firewall_policy.name}-rule-collection-group"
 }
-
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_collection_group_dynamic" {
   name               = local.rule_collection_group_name
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id //module.firewall_policy.id
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id //module.firewall_policy.tf.id
   priority           = var.priority_rule_collection_group
 
   dynamic "network_rule_collection" {
