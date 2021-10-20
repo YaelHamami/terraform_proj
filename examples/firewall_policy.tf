@@ -4,7 +4,6 @@ module "my_firewall_policy" {
   firewall_policy_name           = "myFirewallPlicy"
   location                       = "West Europe"
   resource_group_name            = "myResourceGroup"
-  rule_collection_name           = "myRuleCollectionGroup"
   application_rule_collections   = [
     {
       "name" : "applicationRuleCollection",
@@ -63,5 +62,9 @@ module "my_firewall_policy" {
       ]
     }
   ]
-  rule_collection_groups         = {}
+  rule_collection_groups         = {
+    rule_collection_group = {
+      rule_collection_name = "myRuleCollectionGroup"
+    }
+  }
 }
