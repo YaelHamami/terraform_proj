@@ -18,10 +18,9 @@ module "hub_gateway" {
 
   name              = local.hub_gateway_name
   vpn_address_space = [local.hub_gateway_vpn_address_space]
-  public_ip_names   = [local.hub_gateway_public_ip_name, "oneMorePublicIp"]
+  public_ip_names   = [local.hub_gateway_public_ip_name]
   sku               = local.gateway_sku
   generation        = local.gateway_generation
-  is_active_active  = true
 
   aad_audience_gateway = var.aad_audience_gateway
   aad_issuer_gateway   = var.aad_issuer_gateway

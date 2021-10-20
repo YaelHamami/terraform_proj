@@ -49,10 +49,10 @@ module "hub_vnet" {
 locals {
   hub_vm_name                      = "hub-vm"
   hub_computer_name                = "hub-computer1"
-  hub_vm_size                      = "Standard_F2"
-  hub_vm_publisher                 = "MicrosoftWindowsServer"
-  hub_vm_offer                     = "WindowsServer"
-  hub_vm_sku                       = "2016-Datacenter"
+  hub_vm_size                      = "Standard_B2s"
+  hub_vm_publisher                 = "Canonical"
+  hub_vm_offer                     = "UbuntuServer"
+  hub_vm_sku                       = "16.04-LTS"
   hub_vm_version                   = "latest"
   hub_vm_disk_storage_account_type = "Standard_LRS"
 }
@@ -70,7 +70,6 @@ module "vm_of_hub" {
   image_version             = local.hub_vm_version
   disk_storage_account_type = local.hub_vm_disk_storage_account_type
   managed_data_disks        = jsondecode(file("./data_disks/example.json")).managed_data_disks
-  is_linux = false
 
   size      = local.hub_vm_size
   subnet_id = module.hub_vnet.subnets_ids["HubVmSubnet"]
