@@ -4,8 +4,7 @@ resource "azurerm_public_ip" "public_ip" {
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
-
-  tags = {}
+  tags                = {}
 }
 
 resource "azurerm_virtual_network_gateway" "gateway" {
@@ -39,7 +38,6 @@ resource "azurerm_virtual_network_gateway" "gateway" {
     aad_audience = var.aad_audience_gateway
     aad_issuer   = var.aad_issuer_gateway
   }
-
   tags = {}
 
   depends_on = [azurerm_public_ip.public_ip]

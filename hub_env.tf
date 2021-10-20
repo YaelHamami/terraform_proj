@@ -1,4 +1,4 @@
-## Resource group section.
+# Resource group section.
 locals {
   hub_resource_group_name = "proj-hub-resource-group"
   location                = "West Europe"
@@ -10,6 +10,7 @@ resource "azurerm_resource_group" "hub_resource_group" {
 
   tags = {}
 }
+
 # Hub vnet section.
 locals {
   hub_vnet_address           = "10.0.0.0/16"
@@ -115,7 +116,6 @@ module "hub_route_table" {
   routes                 = jsondecode(templatefile("./routes/hub.json", local.map_hub_routes)).routes
   route_table_name       = local.hub_route_table_name
   associated_subnets_ids = { id = module.hub_vnet.subnets_ids["HubVmSubnet"] }
-
 
   depends_on = [module.hub_vnet, module.hub_firewall]
 }

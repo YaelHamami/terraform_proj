@@ -8,7 +8,6 @@ resource "azurerm_network_interface" "nic" {
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
   }
-
   tags = {}
 }
 
@@ -39,8 +38,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username                  = var.admin_username
   admin_password                  = var.admin_password
   disable_password_authentication = false
-
-  tags = {}
+  tags                            = {}
 
   depends_on = [azurerm_network_interface.nic]
 }
@@ -71,7 +69,6 @@ resource "azurerm_windows_virtual_machine" "vm" {
     sku       = var.image_sku
     version   = var.image_version
   }
-
   tags = {}
 
   depends_on = [azurerm_network_interface.nic]
