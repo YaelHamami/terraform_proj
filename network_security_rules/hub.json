@@ -1,0 +1,26 @@
+{
+  "security_rules": [
+    {
+      "name"                      : "AllowSshInboundFromSpoke",
+      "priority"                  : 110,
+      "direction"                 : "Inbound",
+      "access"                    : "Allow",
+      "protocol"                  : "Tcp",
+      "source_port_range"         : "*",
+      "destination_port_ranges"   : ["22"],
+      "source_address_prefix"     : "${spoke_subnet_mask}",
+      "destination_address_prefix": "*"
+    },
+    {
+      "name"                      : "AllowSshOutbound",
+      "priority"                  : 110,
+      "direction"                 : "Outbound",
+      "access"                    : "Allow",
+      "protocol"                  : "Tcp",
+      "source_port_range"         : "*",
+      "destination_port_ranges"   : ["22"],
+      "source_address_prefix"     : "*",
+      "destination_address_prefix": "${spoke_subnet_mask}"
+    }
+  ]
+}

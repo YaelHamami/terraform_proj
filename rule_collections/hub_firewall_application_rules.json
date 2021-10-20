@@ -1,0 +1,28 @@
+{
+  "application_rule_collections": [
+    {
+      "name"    : "applicationRuleCollection",
+      "priority": 400,
+      "action"  : "Allow",
+      "rules"   : [
+        {
+          "name"             : "rule1",
+          "protocols"        : [
+            {
+              "name": "port80",
+              "type": "Http",
+              "port": 80
+            },
+            {
+              "name": "port443",
+              "type": "Https",
+              "port": 443
+            }
+          ],
+          "source_addresses" : ["*"],
+          "destination_fqdns": ["*.microsoft.com"]
+        }
+      ]
+    }
+  ]
+}

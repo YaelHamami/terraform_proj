@@ -1,0 +1,12 @@
+formatter: markdown
+
+content: |-
+  {{ .Providers }}
+  {{ .Inputs }}
+  {{ .Modules }}
+  {{ .Resources }}
+  ## Usage
+   ```hcl
+  {{ include "../../examples/firewall_policy.tf" }}
+   ```
+  {{ .Outputs }}

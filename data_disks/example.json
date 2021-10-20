@@ -1,0 +1,20 @@
+{
+  "managed_data_disks": [
+    {
+      "name"                : "first_disk",
+      "storage_account_type": "Standard_LRS",
+      "create_option"       : "Empty",
+      "disk_size_gb"        : 10,
+      "lun"                 : "10",
+      "caching"             : "ReadWrite"
+    },
+    {
+      "name"                : "second_disk",
+      "storage_account_type": "Standard_LRS",
+      "create_option"       : "Empty",
+      "disk_size_gb"        : 20,
+      "lun"                 : "20",
+      "caching"             : "ReadOnly"
+    }
+  ]
+}
