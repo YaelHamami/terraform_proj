@@ -14,11 +14,6 @@ module "firewall_policy" {
   location                       = var.location
   firewall_policy_name           = var.firewall_policy_name
   resource_group_name            = var.resource_group_name
-  //application_rule_collections   = var.application_rule_collections
-  //nat_rule_collections           = var.nat_rule_collections
-  //network_rule_collections       = var.network_rule_collections
-#  priority_rule_collection_group = var.priority_rule_collection_group
-#  rule_collection_name           = var.rule_collection_name
   rule_collection_groups         = var.rule_collection_groups
 }
 

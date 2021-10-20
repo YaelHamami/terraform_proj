@@ -103,7 +103,7 @@ module "spoke_route_table" {
   associated_subnets_ids = { id = module.spoke_vnet.subnets_ids["SpokeVmSubnet"] }
   route_table_name       = local.spoke_route_table_name
 
-#  depends_on = [module.spoke_vnet, module.hub_firewall]
+  depends_on = [module.spoke_vnet, module.hub_firewall]
 }
 
 locals {

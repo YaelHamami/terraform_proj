@@ -2,11 +2,11 @@ formatter: markdown
 
 content: |-
   {{ .Providers }}
-  {{ .Header }}
-  ## Usage
-  ```hcl
-  {{ include "..\..\examples\vnet.tf" }}
-  ```
   {{ .Inputs }}
+  {{ .Modules }}
+  {{ .Resources }}
+  ## Usage
+   ```hcl
+  {{ include "../../examples/vnet.tf" }}
+   ```
   {{ .Outputs }}
-
