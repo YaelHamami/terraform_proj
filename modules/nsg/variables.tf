@@ -29,7 +29,14 @@ variable "security_rules" {
     destination_address_prefix   = optional(string),
     destination_address_prefixes = optional(list(string))
   }))
-  description = "List of the ids of subnets in which the nsg will associate with."
+  description = <<DESCRIPTION
+  List of the ids of subnets in which the nsg will associate with. about the optional attributes, you must have one of
+  the fileds between the singular and the multiple
+  chooce one between: source_port_range and source_port_ranges,
+                      destination_port_range and destination_port_ranges
+                      source_address_prefix and source_address_prefixes
+                      destination_address_prefix and destination_address_prefixes
+  DESCRIPTION
 }
 
 variable "associated_subnets_ids" {

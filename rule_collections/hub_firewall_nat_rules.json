@@ -3,7 +3,6 @@
     {
       "rule_collection_name": "natRuleCollection",
       "priority"            : 200,
-      "action"              : "Dnat",
       "rule"                : {
         "name"               : "natRule",
         "protocols"          : ["TCP"],

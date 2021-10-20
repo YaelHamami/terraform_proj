@@ -10,7 +10,7 @@ variable "routes" {
     next_hop_type          = string,
     next_hop_in_ip_address = optional(string)
   }))
-  description = "The routes."
+  description = "The network routes for the route table."
 }
 variable "resource_group_name" {
   type        = string

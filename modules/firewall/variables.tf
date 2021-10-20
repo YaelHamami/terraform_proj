@@ -1,4 +1,3 @@
-# Global Vars.
 variable "resource_group_name" {
   type        = string
   description = "The resource group name."
@@ -78,7 +77,7 @@ variable "rule_collection_groups" {
     nat_rule_collections          = list(object({
       rule_collection_name = string
       priority             = number
-      action               = string
+      action               = optional(string)
       rule                 = object({
         name                = string
         protocols           = list(string)

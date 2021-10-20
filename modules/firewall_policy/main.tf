@@ -11,11 +11,17 @@ resource "azurerm_firewall_policy" "firewall_policy" {
 
 # Firewall Rules.
 locals {
+  rule_collection_groups     = defaults(var.rule_collection_groups,
+  {
+    nat_rule_collections = {
+      action = "Dnat"
+    }
+  })
   rule_collection_group_name = "${azurerm_firewall_policy.firewall_policy.name}-rule-collection-group"
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_collection_group_dynamic" {
-  for_each           = var.rule_collection_groups
+  for_each           = local.rule_collection_groups
   name               = each.value.name
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = each.value.priority

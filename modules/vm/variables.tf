@@ -32,6 +32,7 @@ variable "computer_name" {
 variable "size" {
   type        = string
   description = "Size of the vm."
+  default     = "Standard_LRS"
 }
 
 variable "disk_caching" {
@@ -53,6 +54,7 @@ variable "image_offer" {
 variable "image_sku" {
   type        = string
   description = "The vm image sku."
+  default     = "16.04-LTS"
 }
 
 variable "image_version" {
@@ -73,7 +75,7 @@ variable "admin_username" {
 variable "admin_password" {
   type        = string
   description = "Admin password of the vm."
-  sensitive = true
+  sensitive   = true
 }
 
 variable "managed_data_disks" {

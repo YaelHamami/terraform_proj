@@ -33,9 +33,9 @@ variable "is_active_active" {
   description = "(Optional) If true, an active-active Virtual Network Gateway will be created. An active-active gateway requires a HighPerformance or an UltraPerformance sku"
 }
 
-variable "public_ip_name" {
-  type        = string
-  description = "Name of public ip of the gateway."
+variable "public_ip_names" {
+  type        = list(string)
+  description = "Name of public ip of the gateway. is active-active is true enter 2 else enter 1"
 }
 
 variable "vpn_address_space" {
