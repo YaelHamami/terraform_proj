@@ -1,19 +1,24 @@
-output "virtual_network_id" {
-  value = azurerm_virtual_network.virtual_network.id
+output "id" {
+  value       = azurerm_virtual_network.virtual_network.id
+  description = "The vnet id."
 }
 
-output "virtual_network_name" {
-  value = azurerm_virtual_network.virtual_network.name
+output "name" {
+  value       = azurerm_virtual_network.virtual_network.name
+  description = "The vnet name."
 }
 
-output "virtual_network" {
-  value = azurerm_virtual_network.virtual_network
+output "object" {
+  value       = azurerm_virtual_network.virtual_network
+  description = "The vnet object."
 }
 
 output "subnets_ids" {
-  value = {for subnet in azurerm_subnet.subnets : subnet.name => subnet.id}
+  value       = {for subnet in azurerm_subnet.subnets : subnet.name => subnet.id}
+  description = "The subnets ids."
 }
 
 output "subnets" {
-  value = azurerm_subnet.subnets
+  value       = azurerm_subnet.subnets
+  description = "The subnets objects."
 }

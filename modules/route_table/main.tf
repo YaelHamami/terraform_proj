@@ -16,9 +16,15 @@ resource "azurerm_route_table" "route_table" {
   tags = {}
 }
 
+variable "associated_subnets_ids" {
+  type = map(string)
+  description = "Map of the subnet's ids to associate"
+}
+
 resource "azurerm_subnet_route_table_association" "route_table_association" {
+  for_each = var.associated_subnets_ids
   route_table_id = azurerm_route_table.route_table.id
-  subnet_id      = var.associated_subnet_id
+  subnet_id      = each.value
 
   depends_on = [azurerm_route_table.route_table]
 }

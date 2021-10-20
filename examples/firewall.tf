@@ -59,6 +59,7 @@ module "my_firewall" {
         "translated_port" : "8080"
       }
     }
+
   ]
   network_rule_collections       = [
     {
@@ -76,4 +77,5 @@ module "my_firewall" {
       ]
     }
   ]
+  rule_collection_groups         = {}
 }

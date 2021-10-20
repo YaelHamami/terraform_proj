@@ -1,14 +1,9 @@
 # Public IP of the firewall.
-locals {
-  firewall_public_ip_allocation_method = "Static"
-  firewall_sku                         = "Standard"
-}
-
 resource "azurerm_public_ip" "firewall_public_ip" {
   name                = var.public_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = local.firewall_public_ip_allocation_method
+  allocation_method   = "Static"
   sku                 = var.public_ip_sku
 
   tags = {}
@@ -19,11 +14,12 @@ module "firewall_policy" {
   location                       = var.location
   firewall_policy_name           = var.firewall_policy_name
   resource_group_name            = var.resource_group_name
-  application_rule_collections   = var.application_rule_collections
-  nat_rule_collections           = var.nat_rule_collections
-  network_rule_collections       = var.network_rule_collections
-  priority_rule_collection_group = var.priority_rule_collection_group
-  rule_collection_name           = var.rule_collection_name
+  //application_rule_collections   = var.application_rule_collections
+  //nat_rule_collections           = var.nat_rule_collections
+  //network_rule_collections       = var.network_rule_collections
+#  priority_rule_collection_group = var.priority_rule_collection_group
+#  rule_collection_name           = var.rule_collection_name
+  rule_collection_groups         = var.rule_collection_groups
 }
 
 # The firewall.
@@ -32,6 +28,7 @@ resource "azurerm_firewall" "firewall" {
   location            = var.location
   resource_group_name = var.resource_group_name
   firewall_policy_id  = module.firewall_policy.id
+  sku_tier            = var.firewall_sku
 
   ip_configuration {
     name                 = "ip_configuration"
@@ -44,15 +41,10 @@ resource "azurerm_firewall" "firewall" {
   depends_on = [azurerm_public_ip.firewall_public_ip, module.firewall_policy]
 }
 
-locals {
-  fw_diagnostic_setting_name = "firewall_diagnostic_setting"
-  map_logs_vars              = { is_enabled = true }
-}
-
-module "hub_firewall_diagnostic_setting" {
+module "diagnostic_setting" {
   source                  = "../diagnostic_setting"
   analytics_workspace_id  = var.analytics_workspace_id
-  diagnostic_setting_name = local.fw_diagnostic_setting_name
+  diagnostic_setting_name = "firewall-diagnostic-setting"
   logs                    = [
     {
       "category" : "AzureFirewallNetworkRule",

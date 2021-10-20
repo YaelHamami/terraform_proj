@@ -1,10 +1,9 @@
 module "my_route_table" {
-  source               = "../modules/route_table"
-  associated_subnet_id = azurerm_subnet.my_subnet.id
-  location             = "West Europe"
-  resource_group_name  = "myResourceGroup"
-  route_table_name     = "myRouteTable"
-  routes               = [
+  source                 = "../modules/route_table"
+  location               = "West Europe"
+  resource_group_name    = "myResourceGroup"
+  route_table_name       = "myRouteTable"
+  routes                 = [
     {
       "name" : "HubToFirewall",
       "address_prefix" : "${spoke_subnet_mask}",
@@ -18,4 +17,5 @@ module "my_route_table" {
       "next_hop_in_ip_address" : "${fw_private_ip}"
     }
   ]
+  associated_subnets_ids = { id = azurerm_subnet.my_subnet.id }
 }

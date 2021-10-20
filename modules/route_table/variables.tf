@@ -20,8 +20,3 @@ variable "location" {
   type        = string
   description = "The resource location."
 }
-
-variable "associated_subnet_id" {
-  type        = string
-  description = "The associated subnet."
-}

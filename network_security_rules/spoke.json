@@ -6,7 +6,7 @@
       "direction"                 : "Inbound",
       "access"                    : "Allow",
       "protocol"                  : "Tcp",
-      "source_port_ranges"        : ["0-65535"],
+      "source_port_range"         : "*",
       "destination_port_ranges"   : ["22"],
       "source_address_prefix"     : "${hub_subnet_mask}",
       "destination_address_prefix": "*"
@@ -17,7 +17,7 @@
       "direction"                 : "Inbound",
       "access"                    : "Allow",
       "protocol"                  : "Tcp",
-      "source_port_ranges"        : ["0-65535"],
+      "source_port_range"         : "*",
       "destination_port_ranges"   : ["22"],
       "source_address_prefix"     : "${gateway_subnet_mask}",
       "destination_address_prefix": "*"
@@ -28,7 +28,7 @@
       "direction"                 : "Outbound",
       "access"                    : "Allow",
       "protocol"                  : "Tcp",
-      "source_port_ranges"        : ["0-65535"],
+      "source_port_range"         : "*",
       "destination_port_ranges"   : ["22"],
       "source_address_prefix"     : "*",
       "destination_address_prefix": "${hub_subnet_mask}"

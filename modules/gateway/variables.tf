@@ -1,38 +1,44 @@
 variable "resource_group_name" {
   type        = string
-  description = "Name of rg."
+  description = "Name of resource group."
 }
 
 variable "location" {
   type        = string
-  description = "Location of rg and all the resources in the module."
+  description = "Location of resource group and all the resources in the module."
 }
 
-variable "gateway_subnet_id" {
+variable "subnet_id" {
   type        = string
   description = "The id of the gateway subnet."
 }
 
-variable "gateway_name" {
+variable "name" {
   type        = string
   description = "Name of gateway."
 }
 
-variable "gateway_sku" {
+variable "sku" {
   type        = string
   description = "The gateway sku."
 }
-variable "gateway_generation" {
+variable "generation" {
   type        = string
   description = "The gateway generation."
 }
 
-variable "gateway_public_ip_name" {
+variable "is_active_active" {
+  type        = bool
+  default     = false
+  description = "(Optional) If true, an active-active Virtual Network Gateway will be created. An active-active gateway requires a HighPerformance or an UltraPerformance sku"
+}
+
+variable "public_ip_name" {
   type        = string
   description = "Name of public ip of the gateway."
 }
 
-variable "gateway_vpn_address_space" {
+variable "vpn_address_space" {
   type        = list(string)
   description = "Address Space of VPN gateway client."
 }

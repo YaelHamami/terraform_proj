@@ -1,31 +1,27 @@
-locals {
-  firewall_policy_threat_intelligence_mode = "Deny"
-}
-
 # Firewall policy.
 resource "azurerm_firewall_policy" "firewall_policy" {
   name                = var.firewall_policy_name
   resource_group_name = var.resource_group_name
   location            = var.location
 
-  threat_intelligence_mode = local.firewall_policy_threat_intelligence_mode
+  threat_intelligence_mode = "Deny"
 
   tags = {}
 }
 
 # Firewall Rules.
 locals {
-#  rule_collection_action     = "Allow"
   rule_collection_group_name = "${azurerm_firewall_policy.firewall_policy.name}-rule-collection-group"
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_collection_group_dynamic" {
-  name               = local.rule_collection_group_name
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id //module.firewall_policy.tf.id
-  priority           = var.priority_rule_collection_group
+  for_each           = var.rule_collection_groups
+  name               = each.value.name
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
+  priority           = each.value.priority
 
   dynamic "network_rule_collection" {
-    for_each = var.network_rule_collections
+    for_each = each.value.network_rule_collections
     content {
       name     = network_rule_collection.value.name
       priority = network_rule_collection.value.priority
@@ -46,11 +42,12 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_c
   }
 
   dynamic "application_rule_collection" {
-    for_each = var.application_rule_collections
+    for_each = each.value.application_rule_collections
     content {
       name     = application_rule_collection.value.name
       priority = application_rule_collection.value.priority
       action   = application_rule_collection.value.action
+
       dynamic "rule" {
         for_each = application_rule_collection.value.rules
         content {
@@ -70,7 +67,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_policy_rule_c
   }
 
   dynamic "nat_rule_collection" {
-    for_each = var.nat_rule_collections
+    for_each = each.value.nat_rule_collections
     content {
       name     = nat_rule_collection.value.rule_collection_name
       priority = nat_rule_collection.value.priority

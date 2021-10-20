@@ -1,5 +1,7 @@
 formatter: markdown
+
 content: |-
+  {{ .Providers }}
   {{ .Header }}
   ## Usage
   ```hcl

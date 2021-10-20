@@ -63,4 +63,5 @@ module "my_firewall_policy" {
       ]
     }
   ]
+  rule_collection_groups         = {}
 }
